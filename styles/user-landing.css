@@ -606,7 +606,6 @@ body {
 
 /* Responsive Design Additions */
 @media (max-width: 768px) {
-    /* Navbar: Stack elements vertically */
     .navbar {
         flex-direction: column;
         height: auto;
@@ -624,7 +623,6 @@ body {
         margin-top: 20px;
     }
 
-    /* Body: Adjust topside and bottompart */
     .body .topside {
         height: auto;
         padding: 40px 20px;
@@ -661,7 +659,6 @@ body {
         align-items: center;
     }
 
-    /* Footnote: Stack columns */
     .footnote {
         flex-direction: column;
         height: auto;
@@ -681,7 +678,6 @@ body {
         width: 100%;
     }
 
-    /* Modals: Adjust for smaller screens */
     .modal-content, .login-success-modal-content, .login-error-modal-content {
         width: 90%;
         margin: 20% auto;
@@ -689,154 +685,19 @@ body {
 }
 
 @media (max-width: 480px) {
-    /* Further mobile adjustments */
-    .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
-    }
-    .navbar .rightside #register {
-        width: 100px;
-        height: 40px;
-        font-size: 10pt;
-    }
-
-    .body .topside p {
-        font-size: 14pt;
-    }
     .body .topside h1 {
         font-size: 24pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
-        font-size: 10pt;
-    }
-
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 11pt;
     }
 }
 
 @media (max-width: 425px) {
-    /* Further mobile adjustments */
-    .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
-    }
-    .navbar .rightside #register {
-        width: 100px;
-        height: 40px;
-        font-size: 10pt;
-    }
-
-    .body .topside p {
-        font-size: 14pt;
-    }
     .body .topside h1 {
         font-size: 20pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
-        font-size: 10pt;
-    }
-
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 11pt;
     }
 }
 
 @media (max-width: 375px) {
-    /* Further mobile adjustments */
-    .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
-    }
-    .navbar .rightside #register {
-        width: 100px;
-        height: 40px;
-        font-size: 10pt;
-    }
-
-    .body .topside p {
-        font-size: 14pt;
-    }
     .body .topside h1 {
         font-size: 17pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
-        font-size: 10pt;
-    }
-
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 11pt;
     }
 }
