@@ -1,0 +1,898 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    setupDropdowns();
+    await loadComplaintDetails();
+    setupBackButton();
+});
+
+const card = document.querySelector('.card5');
+const tooltip = document.getElementById('tooltip');
+
+card.addEventListener('mousemove', (e) => {
+  tooltip.style.opacity = '1';
+  const offsetX = 15; 
+  const offsetY = 20; 
+
+  let x = e.clientX + offsetX;
+  let y = e.clientY + offsetY;
+
+  const maxX = window.innerWidth - tooltip.offsetWidth - 10;
+  if (x > maxX) x = maxX;
+
+  const maxY = window.innerHeight - tooltip.offsetHeight - 10;
+  if (y > maxY) y = maxY;
+
+  tooltip.style.left = `${x}px`;
+  tooltip.style.top = `${y}px`;
+});
+
+card.addEventListener('mouseleave', () => {
+  tooltip.style.opacity = '0';
+});
+
+function setupDropdowns() {
+    const dropdowns = document.querySelectorAll('.menu-dropdown');
+    
+    dropdowns.forEach(dropdown => {
+        dropdown.addEventListener('click', (e) => {
+            if (e.target.closest('.submenu a')) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            dropdowns.forEach(other => {
+                if (other !== dropdown) {
+                    other.classList.remove('active');
+                }
+            });
+            
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.menu-dropdown')) {
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        }
+    });
+}
+
+let currentComplaintId = null;
+let isWithdrawn = false;
+
+async function loadComplaintDetails() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        currentComplaintId = urlParams.get('id');
+
+        if (!currentComplaintId) {
+            alert('No complaint ID provided');
+            window.location.href = 'admin-managecomplaints.html';
+            return;
+        }
+
+        console.log('Loading complaint details for ID:', currentComplaintId);
+
+        const { data: complaint, error } = await supabaseClient
+            .from('vito_complaint_incident')
+            .select(`
+                *,
+                vito_ci_complainant (*),
+                vito_ci_respondent (*),
+                vito_ci_stat (*),
+                vito_ci_files (*)
+            `)
+            .eq('vci_id', currentComplaintId)
+            .single();
+
+        if (error) throw error;
+
+        console.log('Complaint data loaded:', complaint);
+
+        const { data: userInfo, error: userError } = await supabaseClient
+            .from('vito_user_info')
+            .select('*')
+            .eq('vu_id', complaint.vu_id)
+            .single();
+
+        if (userError) console.error('Error loading user info:', userError);
+
+        populateComplaintDetails(complaint, userInfo);
+        await loadAttachments(complaint.vito_ci_files || []);
+
+    } catch (error) {
+        console.error('Error loading complaint details:', error);
+        alert('Error loading complaint details: ' + error.message);
+    }
+}
+
+function populateComplaintDetails(complaint, userInfo) {
+    const complainant = complaint.vito_ci_complainant?.[0];
+    const respondent = complaint.vito_ci_respondent?.[0];
+    const stat = complaint.vito_ci_stat?.[0];
+
+    if (complainant && userInfo) {
+        const fullName = `${complainant.vcicomplainant_fname} ${complainant.vcicomplainant_mname || ''} ${complainant.vcicomplainant_lname}`.trim();
+        document.getElementById('complainant').textContent = fullName;
+        
+        const age = calculateAge(userInfo.vui_dob);
+        document.getElementById('age').textContent = age || 'N/A';
+        document.getElementById('dob').textContent = formatDate(userInfo.vui_dob) || 'N/A';
+        document.getElementById('gender').textContent = userInfo.vui_gender || 'N/A';
+        
+        const statusElements = document.querySelectorAll('#status');
+        if (statusElements[0]) statusElements[0].textContent = 'N/A';
+        
+        document.getElementById('contact').textContent = complainant.vcicomplainant_contact || 'N/A';
+        document.getElementById('email').textContent = complainant.vcicomplainant_email || 'N/A';
+        document.getElementById('address').textContent = complainant.vcicomplainant_address || userInfo.vui_address || 'N/A';
+    }
+
+    if (respondent) {
+        document.getElementById('respondent').textContent = respondent.vcirespondent_name || 'N/A';
+        document.getElementById('relationship').textContent = respondent.vcirespondent_relationship || 'N/A';
+        document.getElementById('respaddress').textContent = respondent.vcirespondent_address || 'N/A';
+        document.getElementById('respondentdesc').textContent = respondent.vcirespondent_description || 'N/A';
+    }
+
+    document.getElementById('trackingnum').textContent = complaint.vci_tracking || 'N/A';
+    document.getElementById('type').textContent = complaint.vci_type || 'N/A';
+    document.getElementById('category').textContent = complaint.vci_category || 'N/A';
+    document.getElementById('dtincident').textContent = formatDateTime(complaint.vci_date_time) || 'N/A';
+    document.getElementById('location').textContent = complaint.vci_location || 'N/A';
+    document.getElementById('witness').textContent = complaint.vci_witness || 'N/A';
+    document.getElementById('detaileddesc').textContent = complaint.vci_description || 'N/A';
+
+    if (stat) {
+        const statusElements = document.querySelectorAll('#status');
+        if (statusElements[1]) statusElements[1].textContent = stat.vcistat_current_stat || 'Pending';
+        
+        document.getElementById('datefiled').textContent = formatDate(stat.vcistat_date_filed) || formatDate(complaint.created_at);
+        
+        const assignedOfficerElements = document.querySelectorAll('#datefiled');
+        if (assignedOfficerElements[1]) assignedOfficerElements[1].textContent = stat.vcistat_assigned_officer || 'Not assigned';
+        
+        document.getElementById('resolutionnotes').textContent = stat.vcistat_resolution || 'No resolution notes yet';
+        document.getElementById('lastupdated').textContent = formatDate(stat.vcistat_last_updated) || formatDate(complaint.created_at);
+
+        const resolutionText = (stat.vcistat_resolution || '').toLowerCase();
+        isWithdrawn = resolutionText.includes('withdrawn');
+
+        const updateBtn = document.getElementById('updatebtn');
+        if (isWithdrawn) {
+            updateBtn.disabled = true;
+            updateBtn.classList.add('disabled');
+            updateBtn.title = 'Cannot update withdrawn cases';
+        } else {
+            updateBtn.disabled = false;
+            updateBtn.classList.remove('disabled');
+            updateBtn.title = '';
+        }
+
+        populateModal({
+            status: stat.vcistat_current_stat || '',
+            dateFiled: formatDateForInput(stat.vcistat_date_filed || complaint.created_at),
+            officer: stat.vcistat_assigned_officer || '',
+            notes: stat.vcistat_resolution || ''
+        });
+    }
+}
+
+async function loadAttachments(files) {
+    const attachmentsDiv = document.querySelector('.card5 .header');
+    
+    if (!files || files.length === 0) {
+        attachmentsDiv.innerHTML = `
+            <h4>ATTACHMENTS</h4>
+            <p style="color: #6b7280; margin-top: 20px;">No attachments available</p>
+        `;
+        return;
+    }
+
+    let attachmentsHTML = '<h4>ATTACHMENTS</h4><div style="margin-top: 20px;">';
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const isImage = file.vfile_content_type?.startsWith('image/');
+        
+        if (isImage) {
+            attachmentsHTML += `
+                <div id="file-${i}" style="margin-bottom: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #6b7280;">
+                    <a href="${file.vfile_public_url}" target="_blank" style="color: #1e15b6; text-decoration: underline; font-weight: 600;">
+                        ${file.vfile_filename}
+                    </a>
+                    <br>
+                    <span class="ai-status" style="font-size: 13px; color: #6b7280; font-weight: 600; margin-top: 5px; display: inline-block;">
+                        🔍 Verifying authenticity...
+                    </span>
+                    <div class="ai-details" style="font-size: 11px; color: #6b7280; margin-top: 3px; font-style: italic;"></div>
+                    <div style="margin-top: 10px;">
+                        <img src="${file.vfile_public_url}" 
+                             style="max-width: 200px; max-height: 200px; border-radius: 6px; cursor: pointer;"
+                             onclick="window.open('${file.vfile_public_url}', '_blank')">
+                    </div>
+                </div>
+            `;
+        } else {
+            attachmentsHTML += `
+                <div style="margin-bottom: 10px;">
+                    <a href="${file.vfile_public_url}" target="_blank" style="color: #1e15b6; text-decoration: underline; font-weight: 600;">
+                        ${file.vfile_filename}
+                    </a>
+                </div>
+            `;
+        }
+    }
+
+    attachmentsHTML += '</div>';
+    attachmentsDiv.innerHTML = attachmentsHTML;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const isImage = file.vfile_content_type?.startsWith('image/');
+        
+        if (isImage) {
+            const aiResult = await analyzeImageForAI(file.vfile_public_url);
+            
+            const fileDiv = document.getElementById(`file-${i}`);
+            if (fileDiv) {
+                fileDiv.style.borderLeftColor = aiResult.color;
+                const statusSpan = fileDiv.querySelector('.ai-status');
+                const detailsSpan = fileDiv.querySelector('.ai-details');
+                
+                if (statusSpan) {
+                    statusSpan.textContent = `📊 Verification: ${aiResult.label}`;
+                    statusSpan.style.color = aiResult.color;
+                }
+                
+                if (detailsSpan && aiResult.details) {
+                    detailsSpan.textContent = `ℹ️ ${aiResult.details}`;
+                }
+            }
+        }
+    }
+}
+
+
+async function analyzeImageForAI(imageUrl) {
+    try {
+        console.log('🔍 Starting dual verification...');
+        
+        //Run both in parallel
+        const [metadataResult, aiResult] = await Promise.all([
+            analyzeImageMetadata(imageUrl),
+            analyzeWithHuggingFace(imageUrl)
+        ]);
+        
+        console.log('📊 Metadata:', metadataResult);
+        console.log('🤖 AI Detection:', aiResult);
+        
+        //Combine results
+        if (metadataResult && aiResult) {
+            return combineResults(metadataResult, aiResult);
+        } else if (metadataResult) {
+            return metadataResult;
+        } else if (aiResult) {
+            return aiResult;
+        }
+        
+        return {
+            label: 'Verification unavailable',
+            color: '#6b7280',
+            confidence: 'none',
+            details: 'Unable to verify image'
+        };
+        
+    } catch (error) {
+        console.error('❌ Verification error:', error);
+        return {
+            label: 'Verification error',
+            color: '#6b7280',
+            confidence: 'none',
+            details: error.message
+        };
+    }
+}
+
+function combineResults(metadata, ai) {
+    console.log('🔄 Combining metadata + AI results...');
+    
+    //Both say it's real
+    if (metadata.color === '#10b981' && ai.color === '#10b981') {
+        return {
+            label: `✅ Verified Real Photo - Dual Confirmed`,
+            color: '#10b981',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    //Both say it's AI/fake
+    if (metadata.color === '#ef4444' && ai.color === '#ef4444') {
+        return {
+            label: `🚨 Confirmed AI/Edited - Dual Detected`,
+            color: '#ef4444',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    //They disagree
+    return {
+        label: `⚠️ Conflicting Results - Manual Review Required`,
+        color: '#f59e0b',
+        confidence: 'conflicted',
+        details: `Metadata: ${metadata.label} | AI: ${ai.label}`
+    };
+}
+
+//Hugging Face AI Detection
+async function analyzeWithHuggingFace(imageUrl) {
+    try {
+        //Get FREE token at: https://huggingface.co/settings/tokens
+        const HF_TOKEN = 'YOUR_FREE_HUGGING_FACE_TOKEN';
+        
+        const response = await fetch(
+            'https://api-inference.huggingface.co/models/umm-maybe/AI-image-detector',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${HF_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputs: imageUrl })
+            }
+        );
+
+        const result = await response.json();
+        
+        const aiLabel = result.find(r => r.label.toLowerCase().includes('artificial'));
+        const aiScore = aiLabel?.score || 0;
+        const aiPercent = Math.round(aiScore * 100);
+
+        if (aiScore < 0.3) {
+            return {
+                label: `Real Photo (${100 - aiPercent}% AI confidence)`,
+                color: '#10b981',
+                details: `AI probability: ${aiPercent}%`
+            };
+        } else if (aiScore < 0.7) {
+            return {
+                label: `Uncertain (${aiPercent}% AI)`,
+                color: '#f59e0b',
+                details: `Mixed signals`
+            };
+        } else {
+            return {
+                label: `AI-Generated (${aiPercent}% confidence)`,
+                color: '#ef4444',
+                details: `Strong AI signature`
+            };
+        }
+
+    } catch (error) {
+        console.error('Hugging Face error:', error);
+        return null;
+    }
+}
+
+//Keep all your metadata functions!
+
+function combineResults(metadata, ai) {
+    console.log('🔄 Combining metadata + AI results...');
+    
+    //Both say it's real
+    if (metadata.color === '#10b981' && ai.color === '#10b981') {
+        return {
+            label: `✅ Verified Real Photo - Dual Confirmed`,
+            color: '#10b981',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    //Both say it's AI/fake
+    if (metadata.color === '#ef4444' && ai.color === '#ef4444') {
+        return {
+            label: `🚨 Confirmed AI/Edited - Dual Detected`,
+            color: '#ef4444',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    //They disagree
+    return {
+        label: `⚠️ Conflicting Results - Manual Review Required`,
+        color: '#f59e0b',
+        confidence: 'conflicted',
+        details: `Metadata: ${metadata.label} | AI: ${ai.label}`
+    };
+}
+
+//Hugging Face AI Detection
+async function analyzeWithHuggingFace(imageUrl) {
+    try {
+        //Get FREE token at: https://huggingface.co/settings/tokens
+        const HF_TOKEN = 'YOUR_FREE_HUGGING_FACE_TOKEN';
+        
+        const response = await fetch(
+            'https://api-inference.huggingface.co/models/umm-maybe/AI-image-detector',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${HF_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputs: imageUrl })
+            }
+        );
+
+        const result = await response.json();
+        
+        const aiLabel = result.find(r => r.label.toLowerCase().includes('artificial'));
+        const aiScore = aiLabel?.score || 0;
+        const aiPercent = Math.round(aiScore * 100);
+
+        if (aiScore < 0.3) {
+            return {
+                label: `Real Photo (${100 - aiPercent}% AI confidence)`,
+                color: '#10b981',
+                details: `AI probability: ${aiPercent}%`
+            };
+        } else if (aiScore < 0.7) {
+            return {
+                label: `Uncertain (${aiPercent}% AI)`,
+                color: '#f59e0b',
+                details: `Mixed signals`
+            };
+        } else {
+            return {
+                label: `AI-Generated (${aiPercent}% confidence)`,
+                color: '#ef4444',
+                details: `Strong AI signature`
+            };
+        }
+
+    } catch (error) {
+        console.error('Hugging Face error:', error);
+        return null;
+    }
+}
+
+//DUAL VERIFICATION SYSTEM: HUGGING FACE AI + METADATA ANALYSIS
+//Emerging Technology Integration - 2025
+async function analyzeImageForAI(imageUrl) {
+    try {
+        console.log('Starting dual verification system...');
+        
+        const [metadataResult, aiResult] = await Promise.all([
+            analyzeImageMetadata(imageUrl),
+            analyzeWithHuggingFace(imageUrl)
+        ]);
+        
+        console.log('Metadata result:', metadataResult);
+        console.log('AI result:', aiResult);
+        
+        if (metadataResult && aiResult) {
+            return combineResults(metadataResult, aiResult);
+        } else if (aiResult) {
+            return aiResult;
+        } else if (metadataResult) {
+            return metadataResult;
+        }
+        
+        return {
+            label: 'Verification unavailable',
+            color: '#6b7280',
+            confidence: 'none',
+            details: 'Unable to verify image'
+        };
+        
+    } catch (error) {
+        console.error('Verification error:', error);
+        return {
+            label: 'Verification error',
+            color: '#6b7280',
+            confidence: 'none',
+            details: error.message
+        };
+    }
+}
+
+async function analyzeWithHuggingFace(imageUrl) {
+    try {
+        console.log('Analyzing image with Hugging Face AI detector...');
+        
+        const HF_TOKEN = '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';
+        const MODEL = 'umm-maybe/AI-image-detector';
+        
+        const imageResponse = await fetch(imageUrl);
+        if (!imageResponse.ok) {
+            throw new Error('Failed to fetch image');
+        }
+        const imageBlob = await imageResponse.blob();
+        console.log('Image fetched, size:', imageBlob.size, 'bytes');
+        
+        const HF_API_URL = `https://router.huggingface.co/hf-inference/models/${MODEL}`;
+        
+        try {
+            const aiResponse = await fetch(HF_API_URL, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${HF_TOKEN}`,
+                    'Content-Type': 'application/octet-stream'
+                },
+                body: imageBlob
+            });
+
+            if (aiResponse.ok) {
+                const result = await aiResponse.json();
+                console.log('AI Detection Result:', result);
+                return parseAIResult(result);
+            } else {
+                console.log('Direct API failed, status:', aiResponse.status);
+            }
+        } catch (directError) {
+            console.log('Direct API failed, trying with CORS proxy...');
+        }
+        
+        const base64Image = await blobToBase64(imageBlob);
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        const proxiedUrl = CORS_PROXY + encodeURIComponent(HF_API_URL);
+        
+        const aiResponse = await fetch(proxiedUrl, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${HF_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                inputs: base64Image
+            })
+        });
+
+        if (!aiResponse.ok) {
+            const errorText = await aiResponse.text();
+            console.error('Hugging Face API error:', errorText);
+            
+            try {
+                const errorJson = JSON.parse(errorText);
+                if (errorJson.error && errorJson.error.includes('loading')) {
+                    const estimatedTime = errorJson.estimated_time || 20;
+                    return {
+                        label: `AI Model Loading... Refresh in ${Math.ceil(estimatedTime)}s`,
+                        color: '#f59e0b',
+                        confidence: 'loading',
+                        details: 'Model is initializing, please wait'
+                    };
+                }
+            } catch (e) {
+                console.log('Could not parse error as JSON');
+            }
+            
+            throw new Error('API request failed');
+        }
+
+        const result = await aiResponse.json();
+        console.log('AI Detection Result:', result);
+        return parseAIResult(result);
+
+    } catch (error) {
+        console.error('Hugging Face AI error:', error);
+        return null;
+    }
+}
+
+function parseAIResult(result) {
+    let aiScore = 0;
+    
+    if (Array.isArray(result)) {
+        const artificialResult = result.find(r => 
+            r.label && (r.label.toLowerCase().includes('artificial') || 
+                       r.label.toLowerCase().includes('fake') ||
+                       r.label.toLowerCase().includes('ai') ||
+                       r.label.toLowerCase().includes('generated'))
+        );
+        
+        if (artificialResult) {
+            aiScore = artificialResult.score;
+        } else {
+            const realResult = result.find(r => 
+                r.label && (r.label.toLowerCase().includes('real') || 
+                           r.label.toLowerCase().includes('human'))
+            );
+            aiScore = realResult ? (1 - realResult.score) : 0;
+        }
+    }
+
+    const aiPercentage = Math.round(aiScore * 100);
+    const realPercentage = 100 - aiPercentage;
+
+    if (aiScore < 0.3) {
+        return {
+            label: `Real Photo (${realPercentage}% confidence)`,
+            color: '#10b981',
+            confidence: 'high',
+            details: `AI probability: ${aiPercentage}%`
+        };
+    } else if (aiScore < 0.7) {
+        return {
+            label: `Uncertain (${aiPercentage}% AI probability)`,
+            color: '#f59e0b',
+            confidence: 'medium',
+            details: `Mixed signals detected`
+        };
+    } else {
+        return {
+            label: `AI-Generated (${aiPercentage}% confidence)`,
+            color: '#ef4444',
+            confidence: 'high',
+            details: `Strong AI signature`
+        };
+    }
+}
+
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function analyzeImageMetadata(imageUrl) {
+    try {
+        console.log('Analyzing EXIF metadata...');
+        
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const img = await loadImage(blob);
+        const exifData = await extractExifData(img);
+        
+        console.log('EXIF data extracted:', exifData);
+        
+        return analyzeExifData(exifData);
+        
+    } catch (error) {
+        console.error('Metadata analysis error:', error);
+        return {
+            label: 'No metadata',
+            color: '#f59e0b',
+            confidence: 'low',
+            details: 'No EXIF data found'
+        };
+    }
+}
+
+function loadImage(blob) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(blob);
+    });
+}
+
+function extractExifData(img) {
+    return new Promise((resolve) => {
+        EXIF.getData(img, function() {
+            const allTags = EXIF.getAllTags(this);
+            resolve(allTags);
+        });
+    });
+}
+
+function analyzeExifData(exifData) {
+    const hasCameraMake = exifData.Make || exifData.make;
+    const hasCameraModel = exifData.Model || exifData.model;
+    const hasDateTime = exifData.DateTime || exifData.DateTimeOriginal;
+    const hasGPS = exifData.GPSLatitude || exifData.GPSLongitude;
+    const hasExposure = exifData.ExposureTime;
+    const hasISO = exifData.ISOSpeedRatings;
+    const hasFocalLength = exifData.FocalLength;
+    const hasOrientation = exifData.Orientation;
+    
+    let details = [];
+    if (hasCameraMake) details.push('Camera: ' + hasCameraMake);
+    if (hasCameraModel) details.push(hasCameraModel);
+    if (hasDateTime) details.push('Date: ' + hasDateTime);
+    if (hasGPS) details.push('GPS verified');
+    
+    const detailsText = details.join(' | ') || 'No camera metadata';
+    
+    let score = 0;
+    if (hasCameraMake && hasCameraModel) score += 40;
+    else if (hasCameraMake || hasCameraModel) score += 20;
+    if (hasExposure) score += 10;
+    if (hasISO) score += 10;
+    if (hasFocalLength) score += 10;
+    if (hasGPS) score += 15;
+    if (hasDateTime) score += 10;
+    if (hasOrientation) score += 5;
+    
+    console.log('Metadata authenticity score:', score + '/100');
+    
+    if (score >= 70) {
+        return {
+            label: `Authentic (${score}% metadata)`,
+            color: '#10b981',
+            confidence: 'high',
+            details: detailsText
+        };
+    } else if (score >= 30) {
+        return {
+            label: `Uncertain (${score}% metadata)`,
+            color: '#f59e0b',
+            confidence: 'medium',
+            details: detailsText
+        };
+    } else {
+        return {
+            label: `Suspicious (${score}% metadata)`,
+            color: '#ef4444',
+            confidence: 'low',
+            details: detailsText
+        };
+    }
+}
+
+function combineResults(metadata, ai) {
+    console.log('Combining metadata + AI results...');
+    
+    if (metadata.color === '#10b981' && ai.color === '#10b981') {
+        return {
+            label: 'Verified Real - Dual Confirmed',
+            color: '#10b981',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    if (metadata.color === '#ef4444' && ai.color === '#ef4444') {
+        return {
+            label: 'Confirmed AI/Edited - Dual Detected',
+            color: '#ef4444',
+            confidence: 'very-high',
+            details: `${metadata.details} | ${ai.details}`
+        };
+    }
+    
+    return {
+        label: 'Conflicting Results - Manual Review',
+        color: '#f59e0b',
+        confidence: 'conflicted',
+        details: `Metadata: ${metadata.label} | AI: ${ai.label}`
+        };
+}
+
+
+function setupBackButton() {
+    document.getElementById('backbtn').addEventListener('click', () => {
+        window.location.href = 'admin-managecomplaints.html';
+    });
+}
+
+document.getElementById('updatebtn').addEventListener('click', function() {
+    if (!isWithdrawn) {
+        openModal();
+    }
+});
+
+function openModal() {
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function closeModalOnOverlay(event) {
+    if (event.target.id === 'modalOverlay') {
+        closeModal();
+    }
+}
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
+function populateModal(data) {
+    document.getElementById('currentStatus').value = data.status || '';
+    document.getElementById('dateFiled').value = data.dateFiled || '';
+    document.getElementById('assignedOfficer').value = data.officer || '';
+    document.getElementById('resolutionNotes').value = data.notes || '';
+    
+    const lastUpdatedInput = document.getElementById('lastUpdated');
+    if (lastUpdatedInput) {
+        lastUpdatedInput.closest('.info-item').style.display = 'none';
+    }
+}
+
+async function saveChanges() {
+    try {
+        const currentStatus = document.getElementById('currentStatus').value;
+        const dateFiled = document.getElementById('dateFiled').value;
+        const assignedOfficer = document.getElementById('assignedOfficer').value;
+        const resolutionNotes = document.getElementById('resolutionNotes').value;
+
+        if (!currentStatus || !dateFiled || !assignedOfficer) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        console.log('Updating status for complaint:', currentComplaintId);
+
+        const { data, error } = await supabaseClient
+            .from('vito_ci_stat')
+            .update({
+                vcistat_current_stat: currentStatus,
+                vcistat_date_filed: dateFiled,
+                vcistat_assigned_officer: assignedOfficer,
+                vcistat_resolution: resolutionNotes
+            })
+            .eq('vci_id', currentComplaintId)
+            .select();
+
+        if (error) throw error;
+
+        console.log('Status updated successfully:', data);
+
+        alert('Status updated successfully!');
+        closeModal();
+        
+        await loadComplaintDetails();
+
+    } catch (error) {
+        console.error('Error updating status:', error);
+        alert('Error updating status: ' + error.message);
+    }
+}
+
+function calculateAge(dob) {
+    if (!dob) return null;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
+}
+
+function formatDateTime(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+}
+
+console.log('Complaint view details script loaded');
