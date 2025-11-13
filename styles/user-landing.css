@@ -603,3 +603,136 @@ body {
 .footnote .thirdcolumn li a:hover {
     text-decoration: underline;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .navbar .rightside p {
+        display: none;
+    }
+
+    .navbar .rightside #register {
+        display: none;
+    }
+
+    .burger-menu {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .burger-menu span {
+        width: 25px;
+        height: 3px;
+        background-color: #545454;
+        margin: 3px 0;
+        transition: 0.3s;
+    }
+
+    .burger-menu.open span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .burger-menu.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .burger-menu.open span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 120px;
+        right: 0;
+        background-color: white;
+        flex-direction: column;
+        width: 200px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-links #register-mobile {
+        background-color: #1e15b6;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border: none;
+        border-radius: 10px;
+        width: 100%;
+        height: 45px;
+        font-size: 11pt;
+        margin: 15px;
+        cursor: pointer;
+    }
+
+    .nav-links #register-mobile:hover {
+        background-color: #161175;
+    }
+
+    .body .bottompart {
+        flex-direction: column;
+        gap: 50px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .body .bottompart .about {
+        width: 100%;
+        text-align: center;
+    }
+
+    .body .bottompart .logincard {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .body .bottompart .logincard label {
+        margin-left: 0;
+        text-align: left;
+    }
+
+    .body .bottompart .logincard #email,
+    .body .bottompart .logincard #password {
+        width: 100%;
+    }
+
+    .body .bottompart .logincard .loginbutton {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .body .bottompart .logincard .loginbutton a {
+        margin-top: 10px;
+    }
+
+    .footnote {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        height: auto;
+    }
+
+    .footnote .republiclogo {
+        margin-bottom: 20px;
+    }
+
+    .footnote .firstcolumn,
+    .footnote .secondcolumn,
+    .footnote .thirdcolumn {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .footnote .firstcolumn .first p,
+    .footnote .firstcolumn .second p {
+        width: 100%;
+    }
+}

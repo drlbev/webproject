@@ -3,11 +3,12 @@ window.onload = function() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
+    const burgerMenu = document.getElementById('burger-menu');
+    const navMenu = document.getElementById('nav-menu');
 
-    toggleButton.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+    burgerMenu.addEventListener('click', () => {
+        burgerMenu.classList.toggle('open');
+        navMenu.classList.toggle('open');
     });
 });
 
