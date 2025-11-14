@@ -70,6 +70,8 @@ body {
     flex-direction: column;
     width: 100%;
     height: auto;
+    max-width: 1200px;  
+    margin: 0 auto;  
 }
 
 .body .topside {
@@ -135,6 +137,13 @@ body {
     margin-top: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
+}
+
+.body .bottompart.active .credential p {
+    color: #737373; 
+    font-size: 10.3pt; 
+    font-style: italic; 
+    margin-left: 40px;
 }
 
 .body .bottompart .personal {
@@ -785,5 +794,79 @@ input:focus, select:focus {
     }
     .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
         font-size: 9pt;
+    }
+}
+
+@media (max-width: 366px) {
+    .navbar .leftside .nav-logo {
+        width: 48px;
+        height: 48px;
+        margin-right: 4px;
+    }
+    .navbar .rightside #login {
+        width: 78px;
+        height: 33px;
+        font-size: 7.5pt;
+    }
+
+    .body .topside p {
+        font-size: 11.5pt;
+    }
+    .body .topside h1 {
+        font-size: 17pt;
+    }
+
+    .body .bottompart .credential,
+    .body .bottompart .personal,
+    .body .bottompart .oathcard {
+        max-width: 366px;
+        padding: 9px;
+    }
+    .body .bottompart .header h4 {
+        font-size: 9.5pt;
+    }
+    .body .bottompart .header p {
+        font-size: 8.5pt;
+    }
+    .body .bottompart .credential label,
+    .body .bottompart .personal .row .first label,
+    .body .bottompart .personal .row .second label,
+    .body .bottompart .personal .row4 label,
+    .body .bottompart .oathcard p,
+    .body .bottompart .oathcard label {
+        font-size: 9.5pt;
+    }
+    .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
+    .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
+        height: 38px;
+        font-size: 8.5pt;
+    }
+    .body .bottompart li {
+        font-size: 6.5pt;
+        margin-left: 9px;
+    }
+    .body .bottompart .credentialbutton button,
+    .body .bottompart .personalbutton button,
+    .body .bottompart .oathbutton #done {
+        width: 68px;
+        height: 28px;
+        font-size: 7.5pt;
+    }
+    .body .bottompart .credential #password, #confirmpw{
+        width: 308px;
+    }
+    .toggle-password {
+        right: 268px;
+    }
+
+    .footnote .republiclogo #republiclogo {
+        width: 75px;
+        height: 75px;
+    }
+    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
+        font-size: 7.5pt;
+    }
+    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
+        font-size: 8.5pt;
     }
 }
