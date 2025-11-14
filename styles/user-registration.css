@@ -70,8 +70,6 @@ body {
     flex-direction: column;
     width: 100%;
     height: auto;
-    max-width: 1200px;  
-    margin: 0 auto;  
 }
 
 .body .topside {
