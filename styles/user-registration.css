@@ -806,7 +806,7 @@ input:focus, select:focus {
     .navbar .rightside #login {
         width: 78px;
         height: 33px;
-        font-size: 7.5pt;
+        font-size: 10pt; 
     }
 
     .body .topside p {
@@ -823,10 +823,10 @@ input:focus, select:focus {
         padding: 9px;
     }
     .body .bottompart .header h4 {
-        font-size: 9.5pt;
+        font-size: 10pt; 
     }
     .body .bottompart .header p {
-        font-size: 8.5pt;
+        font-size: 10pt; 
     }
     .body .bottompart .credential label,
     .body .bottompart .personal .row .first label,
@@ -834,23 +834,23 @@ input:focus, select:focus {
     .body .bottompart .personal .row4 label,
     .body .bottompart .oathcard p,
     .body .bottompart .oathcard label {
-        font-size: 9.5pt;
+        font-size: 10pt; 
     }
     .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
     .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
         height: 38px;
-        font-size: 8.5pt;
+        font-size: 10pt;  
     }
     .body .bottompart li {
-        font-size: 6.5pt;
-        margin-left: 9px;
+        font-size: 9pt;  
+        margin-left: 15px;
     }
     .body .bottompart .credentialbutton button,
     .body .bottompart .personalbutton button,
     .body .bottompart .oathbutton #done {
         width: 68px;
         height: 28px;
-        font-size: 7.5pt;
+        font-size: 10pt;  
     }
     .body .bottompart .credential #password, #confirmpw{
         width: 308px;
@@ -864,9 +864,9 @@ input:focus, select:focus {
         height: 75px;
     }
     .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 7.5pt;
+        font-size: 10pt; 
     }
     .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 8.5pt;
+        font-size: 10pt; 
     }
 }
