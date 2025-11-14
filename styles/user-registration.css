@@ -490,7 +490,7 @@ input:focus, select:focus {
 
     .body .topside {
         height: auto;
-        padding: 40px 20px;
+        padding: 20px;
     }
     .body .topside h1 {
         font-size: 28pt;
@@ -838,6 +838,9 @@ input:focus, select:focus {
     .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
         height: 38px;
         font-size: 10pt;  
+    }
+    .body .bottompart.active .credential p {
+        font-size: 9pt;
     }
     .body .bottompart li {
         font-size: 9pt;  
