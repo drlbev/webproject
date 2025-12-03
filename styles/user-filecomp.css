@@ -87,6 +87,29 @@ body {
     background-color: #161175;
 }
 
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.burger-menu span {
+    width: 30px;
+    height: 3px;
+    background-color: #545454;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
 
 .body {
     display: flex;
@@ -632,10 +655,6 @@ input.error, select.error, textarea.error {
     line-height: 1.3rem;
 }
 
-.footnote .secondcolumn li a:hover {
-    text-decoration: underline;
-}
-
 .footnote .thirdcolumn {
     display: flex;
     flex-direction: column;
@@ -648,8 +667,33 @@ input.error, select.error, textarea.error {
     line-height: 1.3rem;
 }
 
-.footnote .thirdcolumn li a:hover {
-    text-decoration: underline;
+.footnote a {
+    color: #979797;
+    text-decoration: none;
+    position: relative;
+}
+
+.footnote a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background-color: #979797;
+    transition: width 0.25s;
+}
+
+.footnote a:hover::after {
+    width: 100%;
+}
+
+.footnote a:hover {
+    color: #5c5c5c; 
+}
+
+.footnote a:active {
+    opacity: 0.7;
 }
 
 select:disabled {
@@ -663,3 +707,551 @@ select:enabled {
     cursor: pointer;
 }
 
+@media (max-width: 1024px) {
+    .navbar .rightside {
+        margin-left: 100px;
+        margin-right: 30px;
+    }
+    
+    .navbar .rightside ul li {
+        padding: 0 10px;
+        font-size: 14pt;
+    }
+    
+    .body .topside h1 {
+        font-size: 32pt;
+        width: 80%;
+    }
+    
+    .body .bottompart {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+    
+    .body .bottompart .steps {
+        gap: 20px;
+    }
+    
+    .body .bottompart .steps .step {
+        padding-right: 50px;
+        font-size: 12pt;
+    }
+    
+    .body .bottompart .steps .step:not(:last-child)::after {
+        width: 50px;
+        right: -10px;
+    }
+    
+    .body .bottompart .cards .card {
+        width: 100%;
+    }
+    
+    .body .bottompart .cards .card .row {
+        flex-wrap: wrap;
+    }
+    
+    .body .bottompart .cards .card .row .col #address,
+    .body .bottompart .cards .card .row .col #respaddress,
+    .body .bottompart .cards .card .row .col #description,
+    .body .bottompart .cards .card .row .col #witness,
+    .body .bottompart .cards .card .row .col #respondentdesc {
+        width: 100%;
+    }
+    
+    .body .bottompart .cards .card .minicardrow {
+        flex-wrap: wrap;
+    }
+    
+    .body .bottompart .cards .card .minicardrow .minicard1,
+    .body .bottompart .cards .card .minicardrow .minicard2 {
+        width: 100%;
+    }
+    
+    .body .bottompart .cards .card .minicard3 {
+        width: 100%;
+    }
+    
+    .footnote {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .footnote .republiclogo #republiclogo {
+        width: 140px;
+        height: 140px;
+        margin-right: 30px;
+    }
+    
+    .footnote .secondcolumn {
+        margin-left: 40px;
+        margin-right: 40px;
+        width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        height: 100px;
+        position: relative;
+        padding: 0 20px;
+    }
+    
+    .navbar .leftside {
+        margin-left: 0;
+        width: auto;
+    }
+    
+    .navbar .leftside .nav-logo {
+        width: 65px;
+        height: 65px;
+        margin-right: 10px;
+    }
+    
+    .burger-menu {
+        display: flex !important;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1001;
+    }
+    
+    .burger-menu span {
+        display: block !important;
+    }
+    
+    .burger-menu.active span:nth-child(1) {
+        transform: rotate(45deg);
+        background-color: #1e15b6;
+    }
+    
+    .burger-menu.active span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    
+    .burger-menu.active span:nth-child(3) {
+        transform: rotate(-45deg);
+        background-color: #1e15b6;
+    }
+    
+    .navbar .rightside {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: auto;
+        background-color: white;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 120px 30px 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: top 0.3s ease;
+        z-index: 999;
+    }
+    
+    .navbar .rightside.active {
+        top: 0;
+    }
+    
+    .navbar .rightside ul {
+        list-style: none;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 30px;
+        padding: 0;
+    }
+    
+    .navbar .rightside ul li {
+        display: block;
+        padding: 15px 0;
+        font-size: 14pt;
+        width: 100%;
+        border-bottom: 1px solid #e5e5e5;
+        text-align: center;
+    }
+    
+    .navbar .rightside ul li:last-child {
+        border-bottom: none;
+    }
+    
+    .navbar .rightside #logout {
+        width: 100%;
+        height: 45px;
+        font-size: 11pt;
+        margin-left: 0;
+    }
+    
+    .body .topside {
+        height: 180px;
+        padding: 20px;
+    }
+    
+    .body .topside p {
+        font-size: 13pt;
+    }
+    
+    .body .topside h1 {
+        font-size: 26pt;
+        width: 85%;
+    }
+    
+    .body .bottompart {
+        margin: 20px 40px 20px 30px;
+        width: calc(100% - 40px);
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 12pt;
+    }
+    
+    .body .bottompart .steps {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .body .bottompart .steps .step {
+        padding-right: 0;
+        font-size: 11pt;
+    }
+    
+    .body .bottompart .steps .step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .body .bottompart .cards .card {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .body .bottompart .cards .card .row {
+        margin-left: 0;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .body .bottompart .cards .card .row .col #fname,
+    .body .bottompart .cards .card .row .col #lname,
+    .body .bottompart .cards .card .row .col #mname,
+    .body .bottompart .cards .card .row .col #suffix,
+    .body .bottompart .cards .card .row .col #age,
+    .body .bottompart .cards .card .row .col #dob,
+    .body .bottompart .cards .card .row .col #status,
+    .body .bottompart .cards .card .row .col #gender,
+    .body .bottompart .cards .card .row .col #contact,
+    .body .bottompart .cards .card .row .col #email,
+    .body .bottompart .cards .card .row .col #type,
+    .body .bottompart .cards .card .row .col #category,
+    .body .bottompart .cards .card .row .col #dtincident,
+    .body .bottompart .cards .card .row .col #location,
+    .body .bottompart .cards .card .row .col #respondent,
+    .body .bottompart .cards .card .row .col #relationship,
+    .body .bottompart .cards .card .row .col #address {
+        width: 100%;
+        font-size: 12px;
+    }
+    
+    .body .bottompart .cards .card .minicardrow {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .body .bottompart .cards .card .minicardrow .minicard1,
+    .body .bottompart .cards .card .minicardrow .minicard2 {
+        width: 100%;
+        height: auto;
+    }
+    
+    .body .bottompart .cards .card .minicard3 {
+        width: 100%;
+        height: auto;
+    }
+    
+    .footnote {
+        flex-direction: column;
+        height: auto;
+        padding: 30px 20px;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .footnote .republiclogo {
+        margin-bottom: 30px;
+    }
+    
+    .footnote .republiclogo #republiclogo {
+        margin-right: 0;
+    }
+    
+    .footnote .firstcolumn,
+    .footnote .secondcolumn,
+    .footnote .thirdcolumn {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 30px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footnote .firstcolumn .first,
+    .footnote .firstcolumn .second {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footnote .firstcolumn .first p {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .footnote .secondcolumn .first,
+    .footnote .secondcolumn .second {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footnote .secondcolumn p,
+    .footnote .thirdcolumn p {
+        text-align: center;
+    }
+    
+    .footnote .secondcolumn ul,
+    .footnote .thirdcolumn ul {
+        list-style-position: inside;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 90px;
+        padding: 0 10px;
+    }
+    
+    .navbar .leftside {
+        margin-left: 0;
+        width: 60%;
+    }
+    
+    .navbar .leftside .nav-logo {
+        width: 55px;
+        height: 55px;
+        margin-right: 8px;
+    }
+    
+    .navbar .rightside {
+        width: 100%;
+        padding: 90px 25px 25px;
+    }
+    
+    .navbar .rightside ul li {
+        padding: 12px 0;
+        font-size: 13pt;
+    }
+    
+    .navbar .rightside #logout {
+        height: 42px;
+        font-size: 10pt;
+    }
+    
+    .burger-menu {
+        right: 15px;
+    }
+    
+    .burger-menu span {
+        width: 28px;
+    }
+    
+    .body .topside {
+        height: 160px;
+        padding: 15px;
+    }
+    
+    .body .topside p {
+        font-size: 11pt;
+    }
+    
+    .body .topside h1 {
+        font-size: 20pt;
+        width: 95%;
+    }
+    
+    .body .bottompart {
+        margin-left: 15px;
+        margin-right: 15px;
+        width: calc(100% - 30px);
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 11pt;
+    }
+    
+    .body .bottompart .steps .step {
+        font-size: 10pt;
+    }
+    
+    .body .bottompart .cards .card {
+        padding: 15px;
+    }
+    
+    .body .bottompart .cards .card .row .col label {
+        font-size: 10pt;
+    }
+    
+    .body .bottompart .cards .card .minicardrow .minicard1,
+    .body .bottompart .cards .card .minicardrow .minicard2,
+    .body .bottompart .cards .card .minicard3 {
+        padding: 20px;
+    }
+    
+    .body .bottompart .buttons #backbtn,
+    .body .bottompart .buttons #nextbtn {
+        font-size: 10pt;
+        width: 90px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 425px) {
+    .navbar .leftside .nav-logo {
+        width: 50px;
+        height: 50px;
+        margin-right: 6px;
+    }
+    
+    .navbar .rightside {
+        width: 100%;
+        padding: 85px 20px 20px;
+    }
+    
+    .navbar .rightside ul li {
+        font-size: 12pt;
+    }
+    
+    .burger-menu span {
+        width: 26px;
+    }
+    
+    .body .topside h1 {
+        font-size: 18pt;
+    }
+    
+    .body .bottompart .cards .card .row .col label {
+        font-size: 9pt;
+    }
+    
+    .body .bottompart .cards .card .minicardrow .minicard1 h4,
+    .body .bottompart .cards .card .minicard2 h4,
+    .body .bottompart .cards .card .minicard3 h4 {
+        font-size: 12pt;
+    }
+    
+    .body .bottompart .cards .card .minicardrow .minicard1 p,
+    .body .bottompart .cards .card .minicard2 p,
+    .body .bottompart .cards .card .minicard3 p {
+        font-size: 10pt;
+    }
+}
+
+@media (max-width: 375px) {
+    .navbar {
+        height: 80px;
+    }
+    
+    .navbar .leftside .nav-logo {
+        width: 45px;
+        height: 45px;
+        margin-right: 5px;
+    }
+    
+    .navbar .rightside {
+        width: 100%;
+        padding: 80px 20px 20px;
+    }
+    
+    .navbar .rightside ul li {
+        padding: 10px 0;
+        font-size: 11pt;
+    }
+    
+    .navbar .rightside #logout {
+        height: 40px;
+        font-size: 9pt;
+    }
+    
+    .burger-menu {
+        right: 12px;
+    }
+    
+    .burger-menu span {
+        width: 24px;
+        height: 2.5px;
+    }
+    
+    .body .topside {
+        height: 140px;
+    }
+    
+    .body .topside p {
+        font-size: 10pt;
+    }
+    
+    .body .topside h1 {
+        font-size: 16pt;
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 10pt;
+    }
+    
+    .body .bottompart .steps .step {
+        font-size: 9pt;
+    }
+    
+    .body .bottompart .cards .card {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 366px) {
+    .navbar .leftside .nav-logo {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .navbar .rightside {
+        width: 100%;
+    }
+    
+    .burger-menu {
+        right: 10px;
+    }
+    
+    .body .topside h1 {
+        font-size: 15pt;
+    }
+    
+    .body .bottompart {
+        margin-left: 20px;
+        margin-right: 20px;
+        width: calc(100% - 40px);
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 10pt;
+    }
+    
+    .body .bottompart .buttons #backbtn,
+    .body .bottompart .buttons #nextbtn {
+        font-size: 10pt;
+        width: 80px;
+        height: 34px;
+    }
+}

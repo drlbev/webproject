@@ -6,6 +6,38 @@ let formData = {
     files: []
 };
 
+document.addEventListener("DOMContentLoaded", () => {
+    const burgerMenu = document.querySelector('.burger-menu');
+    const rightside = document.querySelector('.navbar .rightside');
+    
+    if (burgerMenu && rightside) {
+        burgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            burgerMenu.classList.toggle('active');
+            rightside.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.navbar .rightside') && 
+                !event.target.closest('.burger-menu')) {
+                if (burgerMenu.classList.contains('active')) {
+                    burgerMenu.classList.remove('active');
+                    rightside.classList.remove('active');
+                }
+            }
+        });
+        
+        const navLinks = rightside.querySelectorAll('ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                burgerMenu.classList.remove('active');
+                rightside.classList.remove('active');
+            });
+        });
+    }
+});
+
+
 window.addEventListener('DOMContentLoaded', async () => {
     window.scrollTo(0, 0);
     
