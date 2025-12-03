@@ -500,10 +500,6 @@ input:focus, select:focus {
     line-height: 1.3rem;
 }
 
-.footnote .secondcolumn li a:hover {
-    text-decoration: underline;
-}
-
 .footnote .thirdcolumn {
     display: flex;
     flex-direction: column;
@@ -516,11 +512,36 @@ input:focus, select:focus {
     line-height: 1.3rem;
 }
 
-.footnote .thirdcolumn li a:hover {
-    text-decoration: underline;
+.footnote a {
+    color: #979797;
+    text-decoration: none;
+    position: relative;
 }
 
-/* Tablet Landscape - 1024px */
+.footnote a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background-color: #979797;
+    transition: width 0.25s;
+}
+
+.footnote a:hover::after {
+    width: 100%;
+}
+
+.footnote a:hover {
+    color: #5c5c5c; 
+}
+
+.footnote a:active {
+    opacity: 0.7;
+}
+
+
 @media (max-width: 1024px) {
     .navbar .rightside {
         margin-left: 100px;
@@ -549,7 +570,7 @@ input:focus, select:focus {
     }
 }
 
-/* Tablet Portrait - 768px */
+
 @media (max-width: 768px) {
     .navbar {
         height: 100px;
@@ -705,7 +726,7 @@ input:focus, select:focus {
     }
 }
 
-/* Mobile Large - 480px */
+
 @media (max-width: 480px) {
     .navbar {
         height: 90px;
@@ -776,7 +797,7 @@ input:focus, select:focus {
     .body .bottompart .oathcard p,
     .body .bottompart .oathcard label,
     .body .bottompart .oathcard a {
-        font-size: 12pt;
+        font-size: 11pt;
     }
     
     .body .bottompart .personal .row {
@@ -797,9 +818,18 @@ input:focus, select:focus {
     .password-requirements li.met {
         margin-left: 30px;
     }
+
+    .password-requirements p {
+        font-size: 10pt;
+    }
+
+    .body .bottompart li {
+        font-size: 10pt;
+        margin-left: 20px;
+    }
 }
 
-/* Mobile Medium - 425px */
+
 @media (max-width: 425px) {
     .navbar .leftside .nav-logo {
         width: 50px;
@@ -825,7 +855,7 @@ input:focus, select:focus {
     }
 }
 
-/* Mobile Small - 375px */
+
 @media (max-width: 375px) {
     .navbar {
         height: 80px;
@@ -860,11 +890,11 @@ input:focus, select:focus {
     }
     
     .body .bottompart .header h4 {
-        font-size: 11pt;
+        font-size: 12pt;
     }
     
     .body .bottompart .header p {
-        font-size: 10pt;
+        font-size: 11pt;
     }
     
     .body .bottompart .credentialbutton #back,
@@ -878,7 +908,7 @@ input:focus, select:focus {
     }
 }
 
-/* Mobile Extra Small - 366px */
+
 @media (max-width: 366px) {
     .navbar .leftside .nav-logo {
         width: 42px;
@@ -902,5 +932,9 @@ input:focus, select:focus {
     .body .bottompart .oathcard {
         width: 98%;
         padding: 20px 12px;
+    }
+
+    .body .bottompart.active {
+        margin: 0 30px 30px;
     }
 }
