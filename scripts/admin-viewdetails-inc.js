@@ -68,7 +68,7 @@ async function loadIncidentDetails() {
 
         if (!currentIncidentId) {
             alert('No incident ID provided');
-            window.location.href = 'admin-manageincidents.html';
+            window.location.href = '/admin/admin-manageincidents.html';
             return;
         }
 
@@ -255,7 +255,6 @@ async function loadAttachments(files) {
 }
 
 //DUAL VERIFICATION SYSTEM: HUGGING FACE AI + METADATA ANALYSIS
-//Emerging Technology Integration - 2025
 
 async function analyzeImageForAI(imageUrl) {
     try {
@@ -299,8 +298,8 @@ async function analyzeWithHuggingFace(imageUrl) {
     try {
         console.log('Analyzing image with Hugging Face AI detector...');
         
-        const HF_TOKEN = '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';
-        const MODEL = 'umm-maybe/AI-image-detector';
+        const HF_TOKEN = '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';
+        const MODEL = 'Organika/sdxl-detector';
         
         const imageResponse = await fetch(imageUrl);
         if (!imageResponse.ok) {
@@ -421,7 +420,7 @@ function parseAIResult(result) {
     } else {
         return {
             label: `AI-Generated (${aiPercentage}% confidence)`,
-            color: '#ef4444',
+            color: '#b86767ff',
             confidence: 'high',
             details: `Strong AI signature`
         };
@@ -534,37 +533,145 @@ function analyzeExifData(exifData) {
 }
 
 function combineResults(metadata, ai) {
-    console.log('Combining metadata + AI results...');
+    console.log("🔬 HYBRID ANALYSIS - Combining metadata + AI results");
+    console.log("📊 Metadata:", metadata.label, "(" + metadata.color + ")");
+    console.log("🤖 AI Result:", ai.label, "(" + ai.color + ")");
+
+    // Extract numerical scores (0-100)
+    const metadataScore = extractPercentage(metadata.label);
     
-    if (metadata.color === '#10b981' && ai.color === '#10b981') {
-        return {
-            label: 'Verified Real - Dual Confirmed',
-            color: '#10b981',
-            confidence: 'very-high',
-            details: `${metadata.details} | ${ai.details}`
-        };
+    // Extract AI confidence score
+    let aiScore = extractPercentage(ai.label);
+    if (aiScore === 0 && ai.details) {
+        const detailScore = extractPercentage(ai.details);
+        if (ai.details.includes('AI probability')) {
+            aiScore = 100 - detailScore; // Invert if it's AI probability
+        } else {
+            aiScore = detailScore;
+        }
     }
     
-    if (metadata.color === '#ef4444' && ai.color === '#ef4444') {
+    console.log("📈 Raw Metadata Score:", metadataScore + "%");
+    console.log("📈 Raw AI Score:", aiScore + "%");
+
+    // Normalize to 0-1 scale
+    let metadataConfidence = metadataScore / 100;
+    let aiConfidence = aiScore / 100;
+
+    
+    // SMART PENALTY SYSTEM - The key improvement!
+    
+    // RULE 1: If AI strongly says "AI-generated" (70%+), trust it completely
+    if (aiScore >= 70 && ai.color === "#ef4444") {
+        console.log("🚫 AI detector strongly confident this is AI-generated");
+        console.log("   → Trusting AI result completely, ignoring metadata");
+        
         return {
-            label: 'Confirmed AI/Edited - Dual Detected',
-            color: '#ef4444',
-            confidence: 'very-high',
-            details: `${metadata.details} | ${ai.details}`
+            label: `🚫 Likely AI-Generated (${aiScore}% confidence)`,
+            color: "#ef4444",
+            confidence: "high",
+            details: `Metadata: ${metadata.label} | AI: ${ai.label}`
         };
     }
+    // RULE 2: If AI strongly says "Real" (70%+) AND metadata is zero
+    // This is the tricky case - could be Google download OR AI-generated that fooled the AI
+    else if (aiScore >= 70 && metadataScore === 0) {
+        console.log("⚠️ AMBIGUOUS CASE: AI says real, but no metadata");
+        console.log("   → Could be: Downloaded from web, social media, OR sophisticated AI image");
+        console.log("   → Applying MODERATE penalty (not severe)");
+        aiConfidence *= 0.75; // Only 25% penalty, not 60%
+    }
     
-    return {
-        label: 'Conflicting Results - Manual Review',
-        color: '#f59e0b',
-        confidence: 'conflicted',
-        details: `Metadata: ${metadata.label} | AI: ${ai.label}`
+    // RULE 3: If AI is uncertain (30-69%) AND metadata is zero
+    // This is a red flag - increase suspicion
+    else if (aiScore >= 30 && aiScore < 70 && metadataScore === 0) {
+        console.log("🚨 SUSPICIOUS: AI uncertain + no metadata");
+        console.log("   → Applying HEAVY penalty");
+        aiConfidence *= 0.5; // 50% penalty
+    }
+    
+    // RULE 4: If metadata is low (1-30%), apply light penalty
+    else if (metadataScore > 0 && metadataScore < 30) {
+        console.log("⚠️ Low metadata present");
+        console.log("   → Applying light penalty");
+        aiConfidence *= 0.85; // 15% penalty
+    }
+
+    // Calculate weighted final score
+    // When metadata is 0, give MORE weight to AI (80/20 instead of 60/40)
+    // When metadata exists, use balanced weights (60/40)
+    let aiWeight, metadataWeight;
+    
+    if (metadataScore === 0) {
+        aiWeight = 0.80;      // Trust AI more when no metadata available
+        metadataWeight = 0.20;
+        console.log("📊 Using AI-heavy weighting (80/20) due to missing metadata");
+    } else {
+        aiWeight = 0.60;
+        metadataWeight = 0.40;
+        console.log("📊 Using balanced weighting (60/40)");
+    }
+    
+    const finalScore = (aiConfidence * aiWeight) + (metadataConfidence * metadataWeight);
+    const finalPercentage = Math.round(finalScore * 100);
+    
+    console.log("📊 Adjusted AI Confidence:", Math.round(aiConfidence * 100) + "%");
+    console.log("📊 Final Combined Score:", finalPercentage + "%");
+
+    
+    // CLASSIFICATION - More nuanced thresholds
+    
+    
+    if (finalScore >= 0.65) {
+        // LIKELY REAL
+        // Add context if metadata is missing
+        let explanation = `Metadata: ${metadata.label} | AI: ${ai.label}`;
+        if (metadataScore === 0 && aiScore >= 70) {
+            explanation += " | Note: No camera data (possibly downloaded/shared)";
+        }
+        
+        return {
+            label: `✅ Likely Real (${finalPercentage}% confidence)`,
+            color: "#10b981", // Green
+            confidence: "high",
+            details: explanation
         };
+    } 
+    else if (finalScore <= 0.40) {
+        // LIKELY AI-GENERATED
+        return {
+            label: `🚫 Likely AI-Generated (${100 - finalPercentage}% confidence)`,
+            color: "#ef4444", // Red
+            confidence: "high",
+            details: `Metadata: ${metadata.label} | AI: ${ai.label}`
+        };
+    } 
+    else {
+        // UNCERTAIN (41-64%)
+        // Provide guidance on what to look for
+        let advice = "Manual review recommended";
+        if (metadataScore === 0) {
+            advice = "Check if image source is legitimate (Google, social media, etc.)";
+        }
+        
+        return {
+            label: `⚠️ Uncertain (${finalPercentage}% confidence)`,
+            color: "#f59e0b", // Orange
+            confidence: "medium",
+            details: `Metadata: ${metadata.label} | AI: ${ai.label} | ${advice}`
+        };
+    }
+}
+
+function extractPercentage(text) {
+    if (!text) return 0;
+    const match = text.match(/(\d+)%/);
+    return match ? parseInt(match[1]) : 0;
 }
 
 function setupBackButton() {
     document.getElementById('backbtn').addEventListener('click', () => {
-        window.location.href = 'admin-manageincidents.html';
+        window.location.href = '/admin/admin-manageincidents.html';
     });
 }
 
@@ -687,5 +794,6 @@ function formatDateForInput(dateString) {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
 }
+
 
 console.log('Incident view details script loaded');

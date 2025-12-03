@@ -1,12 +1,12 @@
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; 
     scroll-padding-top: 6rem;
     overflow-x: hidden;
 }
 
 body {
     overflow-x: hidden;
-    overflow-y: auto; /* Changed to auto for scrolling on smaller screens */
+    overflow-y: hidden;
 }
 
 * {
@@ -87,33 +87,6 @@ body {
     background-color: #161175;
 }
 
-.burger-menu {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.burger-menu span {
-    width: 25px;
-    height: 3px;
-    background-color: #545454;
-    margin: 3px 0;
-    transition: 0.3s;
-}
-
-.burger-menu.open span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-
-.burger-menu.open span:nth-child(2) {
-    opacity: 0;
-}
-
-.burger-menu.open span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-}
-
 
 .body {
     display: flex;
@@ -131,7 +104,6 @@ body {
     justify-content: center;
     height: 212px;
     margin-bottom: 40px;
-    padding: 20px; /* Added padding for better spacing */
 }
 
 .body .topside p {
@@ -152,7 +124,6 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
-    padding: 0 20px; /* Added padding for mobile */
 }
 
 .body .bottompart .header h4 {
@@ -165,8 +136,6 @@ body {
     display: flex;
     flex-direction: row;
     gap: 20px;
-    flex-wrap: wrap; /* Added flex-wrap for responsiveness */
-    justify-content: center; /* Center cards */
 }
 
 .body .bottompart .fourcards .card1,
@@ -182,8 +151,6 @@ body {
     align-items: center;
     justify-content: center;
     padding: 30px;
-    flex: 1 1 244px; /* Allow shrinking and growing */
-    min-width: 200px; /* Minimum width */
 }
 
 .body .bottompart .fourcards .card1:hover,
@@ -216,7 +183,7 @@ body {
     background-color: white;
     border: 1px solid #545454;
     border-radius: 10px;
-    width: 555px;
+    width:  555px;
     height: 53px;
     font-size: 13pt;
     padding-left: 15px;
@@ -225,8 +192,6 @@ body {
 
 .body .bottompart .search {
     margin-bottom: 40px;
-    display: flex;
-    justify-content: center; /* Center search input */
 }
 
 .logout-modal {
@@ -539,242 +504,4 @@ body {
 .fourcards .card3:hover,
 .fourcards .card4:hover {
     transform: scale(1.02);
-}
-
-/* Responsive Design */
-
-/* Tablet Styles */
-@media (max-width: 768px) {
-    .navbar {
-        height: auto;
-        flex-direction: column;
-        padding: 10px 0;
-    }
-
-    .navbar .leftside {
-        width: 100%;
-        justify-content: center;
-        margin-left: 0;
-        margin-bottom: 10px;
-    }
-
-    .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-    }
-
-    .navbar .rightside {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        justify-content: center;
-    }
-
-    .navbar .rightside ul li {
-        font-size: 14pt;
-        padding: 0 10px;
-    }
-
-    .navbar .rightside #logout {
-        width: 120px;
-        height: 40px;
-        font-size: 10pt;
-    }
-
-    .body .topside {
-        height: auto;
-        padding: 40px 20px;
-    }
-
-    .body .topside h1 {
-        font-size: 28pt;
-        width: 90%;
-    }
-
-    .body .topside p {
-        font-size: 14pt;
-    }
-
-    .body .bottompart {
-        padding: 0 10px;
-    }
-
-    .body .bottompart .fourcards {
-        gap: 15px;
-    }
-
-    .body .bottompart .fourcards .card1,
-    .body .bottompart .fourcards .card2,
-    .body .bottompart .fourcards .card3,
-    .body .bottompart .fourcards .card4 {
-        width: 100%;
-        max-width: 244px;
-        height: 120px;
-        padding: 20px;
-        flex: 1 1 100%;
-    }
-
-    .body .bottompart .fourcards .card1 p,
-    .body .bottompart .fourcards .card2 p,
-    .body .bottompart .fourcards .card3 p,
-    .body .bottompart .fourcards .card4 p {
-        font-size: 13pt;
-    }
-
-    .body .bottompart .search #searchinput {
-        width: 100%;
-        max-width: 555px;
-    }
-
-    .footnote {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-
-    .footnote .firstcolumn,
-    .footnote .secondcolumn,
-    .footnote .thirdcolumn {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-    .footnote .firstcolumn .first p {
-        width: 100%;
-    }
-
-    .logout-modal-content {
-        width: 95%;
-    }
-
-    .modal-content {
-        width: 95%;
-        max-width: none;
-    }
-}
-
-/* Mobile Styles */
-@media (max-width: 480px) {
-    .burger-menu {
-        display: flex;
-    }
-
-    #nav-menu {
-        display: none;
-        position: absolute;
-        top: 120px;
-        left: 0;
-        width: 100%;
-        background-color: white;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    #nav-menu.open {
-        display: flex;
-    }
-
-    .navbar .leftside .nav-logo {
-        width: 50px;
-        height: 50px;
-    }
-
-    .navbar .rightside ul li {
-        font-size: 12pt;
-        padding: 10px 0;
-        width: 100%;
-        text-align: center;
-    }
-
-    .navbar .rightside #logout {
-        width: 100px;
-        height: 35px;
-        font-size: 9pt;
-    }
-
-    .body .topside h1 {
-        font-size: 24pt;
-        width: 100%;
-    }
-
-    .body .topside p {
-        font-size: 12pt;
-    }
-
-    .body .bottompart .header h4 {
-        font-size: 12pt;
-    }
-
-    .body .bottompart .fourcards .card1,
-    .body .bottompart .fourcards .card2,
-    .body .bottompart .fourcards .card3,
-    .body .bottompart .fourcards .card4 {
-        height: 100px;
-        padding: 15px;
-    }
-
-    .body .bottompart .fourcards .card1 p,
-    .body .bottompart .fourcards .card2 p,
-    .body .bottompart .fourcards .card3 p,
-    .body .bottompart .fourcards .card4 p {
-        font-size: 12pt;
-    }
-
-    .body .bottompart .search #searchinput {
-        height: 45px;
-        font-size: 12pt;
-    }
-
-    .footnote {
-        padding: 10px;
-    }
-
-    .footnote .republiclogo #republiclogo {
-        width: 100px;
-        height: 100px;
-    }
-
-    .footnote .firstcolumn .first h6,
-    .footnote .firstcolumn .second h6,
-    .footnote .secondcolumn .first h6,
-    .footnote .thirdcolumn p {
-        font-size: 11pt;
-    }
-
-    .footnote .firstcolumn .first p,
-    .footnote .firstcolumn .second p,
-    .footnote .secondcolumn p,
-    .footnote .secondcolumn li,
-    .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-
-    .logout-modal-content {
-        width: 98%;
-    }
-
-    .modal-content {
-        width: 98%;
-        margin: 10% auto;
-    }
-
-    .modal-header h2 {
-        font-size: 12pt;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
 }

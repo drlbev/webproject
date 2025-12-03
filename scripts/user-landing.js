@@ -6,8 +6,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleButton = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    toggleButton.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+
+    //password visibility toggle
+    const passwordToggles = document.querySelectorAll('.toggle-password');
+    passwordToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            }
+        });
     });
 });
 
@@ -20,14 +39,20 @@ window.addEventListener('DOMContentLoaded', async () => {
     const errorCode = hashParams.get('error_code');
     const errorDescription = hashParams.get('error_description');
 
-    //handle expired/invalid link
     if (error === 'access_denied' || errorCode === 'otp_expired') {
         window.history.replaceState(null, null, window.location.pathname);
-        showExpiredLinkModal(errorDescription || 'The link has expired or is invalid.');
+        
+        if (type === 'signup') {
+            showExpiredConfirmationModal(); //Shows email input with resend option
+        } else if (type === 'recovery') {
+            showExpiredLinkModal('Your password reset link has expired. Please request a new one using the "Forgot Password" button.', 'Password Reset Link Expired');
+        } else {
+            showExpiredLinkModal(errorDescription || 'The link has expired or is invalid.');
+        }
         return;
     }
 
-    //handle email confirmation callback
+    //Handle email confirmation callback
     if (type === 'signup' && accessToken) {
         console.log('Email confirmed! Showing success modal...');
         window.history.replaceState(null, null, window.location.pathname);
@@ -35,29 +60,27 @@ window.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    //handle password reset callback (FIXED)
+    //Handle password reset callback
     if (type === 'recovery' && accessToken) {
         console.log('Password recovery detected');
         
-        //verify the session is valid before showing modal
         try {
             const { data: { user }, error } = await supabaseClient.auth.getUser();
             
             if (error || !user) {
                 console.error('Session error:', error);
                 window.history.replaceState(null, null, window.location.pathname);
-                showExpiredLinkModal('The password reset link has expired or is invalid.');
+                showExpiredLinkModal('The password reset link has expired or is invalid.', 'Password Reset Link Expired');
                 return;
             }
             
-            //session is valid, show reset modal
             window.history.replaceState(null, null, window.location.pathname);
             showPasswordResetModal();
             
         } catch (err) {
             console.error('Auth error:', err);
             window.history.replaceState(null, null, window.location.pathname);
-            showExpiredLinkModal('Unable to verify your session. Please request a new password reset link.');
+            showExpiredLinkModal('Unable to verify your session. Please request a new password reset link.', 'Session Error');
         }
     }
 });
@@ -107,22 +130,130 @@ function showAccountCreatedModal() {
     });
 }
 
+//Add this function after your other modal functions in user-landing.js
+
+//Modal for expired email confirmation with resend option
+function showExpiredConfirmationModal() {
+    const modalHTML = `
+        <div id="expiredConfirmModal" class="modal" style="display: block;">
+            <div class="modal-content" style="text-align: center; padding: 40px; max-width: 500px; margin: 100px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                <div style="font-size: 70px; margin-bottom: 20px;">⏰</div>
+                <h2 style="color: #f59e0b; margin-bottom: 15px;">Email Confirmation Link Expired</h2>
+                <p style="color: #666; font-size: 16px; margin-bottom: 25px; line-height: 1.6;">
+                    Your email confirmation link has expired for security reasons.
+                </p>
+                <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 25px; text-align: left;">
+                    <p style="color: #92400e; font-size: 14px; margin: 0; line-height: 1.6;">
+                        <strong>📌 Don't worry!</strong><br>
+                        Enter your email below and we'll send you a new confirmation link.
+                    </p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <input 
+                        type="email" 
+                        id="resendConfirmEmail" 
+                        placeholder="Enter your email address"
+                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;"
+                    >
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button id="resendConfirmBtn" style="background: #3b82f6; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.3s;">
+                        RESEND CONFIRMATION
+                    </button>
+                    <button id="closeExpiredConfirmBtn" style="background: #6b7280; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;">
+                        CLOSE
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modalStyle = document.createElement('style');
+    modalStyle.textContent = `
+        #expiredConfirmModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+        #resendConfirmBtn:hover {
+            background: #2563eb !important;
+        }
+    `;
+    document.head.appendChild(modalStyle);
+
+    //Resend confirmation email
+    document.getElementById('resendConfirmBtn').addEventListener('click', async () => {
+        const email = document.getElementById('resendConfirmEmail').value.trim();
+        const btn = document.getElementById('resendConfirmBtn');
+        
+        if (!email) {
+            alert('Please enter your email address');
+            return;
+        }
+        
+        if (!isValidEmail(email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'SENDING...';
+
+        try {
+            const { error } = await supabaseClient.auth.resend({
+                type: 'signup',
+                email: email,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/user/user-landing.html`
+                }
+            });
+
+            if (error) throw error;
+
+            document.getElementById('expiredConfirmModal').remove();
+            showEmailSentModal(email);
+
+        } catch (error) {
+            console.error('Resend error:', error);
+            
+            let errorMsg = 'Error: ';
+            if (error.message.includes('rate limit')) {
+                errorMsg = '⏱️ Too many requests. Please wait a few minutes and try again.';
+            } else if (error.message.includes('User not found')) {
+                errorMsg = '📧 No account found with this email. Please register first.';
+            } else {
+                errorMsg += error.message;
+            }
+            
+            alert(errorMsg);
+            btn.disabled = false;
+            btn.textContent = 'RESEND CONFIRMATION';
+        }
+    });
+
+    document.getElementById('closeExpiredConfirmBtn').addEventListener('click', () => {
+        document.getElementById('expiredConfirmModal').remove();
+    });
+}
+
 //expired/invalid link modal
-function showExpiredLinkModal(message = 'The reset link has expired or is invalid.') {
+function showExpiredLinkModal(message = 'The link has expired or is invalid.', title = 'Link Expired or Invalid') {
     const modalHTML = `
         <div id="expiredLinkModal" class="modal" style="display: block;">
             <div class="modal-content" style="text-align: center; padding: 40px; max-width: 500px; margin: 100px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                 <div style="font-size: 70px; margin-bottom: 20px;">⏰</div>
-                <h2 style="color: #ef4444; margin-bottom: 15px;">Link Expired or Invalid</h2>
-                <p style="color: #666; font-size: 16px; margin-bottom: 25px;">
+                <h2 style="color: #ef4444; margin-bottom: 15px;">${title}</h2>
+                <p style="color: #666; font-size: 16px; margin-bottom: 25px; line-height: 1.6;">
                     ${message}
                 </p>
-                <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 15px; margin-bottom: 25px; text-align: left;">
-                    <p style="color: #991b1b; font-size: 14px; margin: 0;">
-                        <strong>📌 What to do:</strong><br>
-                        Request a new password reset link using the "Forgot Password" button.
-                    </p>
-                </div>
                 <button id="closeExpiredBtn" style="background: #3b82f6; color: white; border: none; padding: 14px 50px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;">
                     OK
                 </button>
@@ -448,7 +579,7 @@ if (loginBtn) {
             showLoginSuccess();
 
             setTimeout(() => {
-                window.location.href = 'user-dashboard.html';
+                window.location.href = '/user/user-dashboard.html';
             }, 1500);
 
         } catch (error) {
@@ -533,7 +664,7 @@ sendResetBtn.addEventListener('click', async () => {
 
         //send password reset email
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/user-landing.html`
+            redirectTo: `${window.location.origin}/user/user-landing.html`
         });
 
         if (error) throw error;

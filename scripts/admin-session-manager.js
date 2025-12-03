@@ -201,7 +201,7 @@ function getAdminName() {
 }
 
 function setupLogout() {
-    const logoutLink = document.querySelector('a[href="admin-landing.html"]');
+    const logoutLink = document.querySelector('a[href="/admin/admin-landing.html"]');
     const logoutModal = document.getElementById('logoutModal');
     const cancelLogoutBtn = document.getElementById('cancelLogout');
     const confirmLogoutBtn = document.getElementById('confirmLogout');
@@ -260,7 +260,7 @@ async function handleLogout() {
 
         await supabaseClient.auth.signOut();
         clearAdminSession();
-        window.location.href = 'admin-landing.html';
+        window.location.href = '/admin/admin-landing.html';
     } catch (error) {
         console.error('Logout error:', error);
         alert('Error logging out. Please try again.');
@@ -279,9 +279,9 @@ function clearAdminSession() {
 }
 
 function redirectToLogin() {
-    if (window.location.pathname !== '/admin-landing.html' && 
-        !window.location.pathname.endsWith('admin-landing.html')) {
-        window.location.href = 'admin-landing.html';
+    if (window.location.pathname !== '/admin/admin-landing.html' && 
+        !window.location.pathname.endsWith('/admin/admin-landing.html')) {
+        window.location.href = '/admin/admin-landing.html';
     }
 }
 

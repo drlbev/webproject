@@ -58,6 +58,7 @@ body {
     height: 45px;
     font-size: 11pt;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .navbar .rightside #register:hover {
@@ -111,6 +112,7 @@ body {
     color: #545454;
     font-size: 15pt;
     margin-bottom: 20px;
+    margin-left: 30px;
 }
 
 .body .bottompart .about p {
@@ -118,6 +120,7 @@ body {
     font-size: 13.7pt;
     text-align: justify;
     line-height: 1.5;
+    margin-left: 30px;
 }
 
 .body .bottompart .logincard {
@@ -130,6 +133,7 @@ body {
     height: 377px;
     justify-content: center;
     align-items: center;
+    margin-right: 30px;
 }
 
 .body .bottompart .logincard label {
@@ -140,7 +144,7 @@ body {
     margin-left: 40px;
 }
 
-.body .bottompart .logincard #email, #password {
+.body .bottompart .logincard #email {
     border: 1px solid #b4b4b4;
     border-radius: 5px;
     font-size: 12.4pt;
@@ -149,6 +153,40 @@ body {
     padding-left: 15px;
     padding-right: 15px;
     margin-bottom: 31px;
+}
+
+.password-container {
+    position: relative;
+    width: 562px;
+    margin-bottom: 31px;
+}
+
+.password-container #password {
+    border: 1px solid #b4b4b4;
+    border-radius: 5px;
+    font-size: 12.4pt;
+    width: 100%;
+    height: 54px;
+    padding-left: 15px;
+    padding-right: 45px;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Password toggle icon positioning */
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px;
+    margin-bottom: 0;
 }
 
 .body .bottompart .logincard .loginbutton {
@@ -604,220 +642,494 @@ body {
     text-decoration: underline;
 }
 
-/* Responsive Design Additions */
+ 
+@media (max-width: 1024px) {
+    .navbar .leftside {
+        width: 35%;
+    }
+
+    .navbar .rightside {
+        margin-left: 100px;
+        width: 45%;
+    }
+
+    .navbar .rightside p {
+        font-size: 10pt;
+    }
+
+    .body .topside h1 {
+        font-size: 32pt;
+        width: 80%;
+    }
+
+    .body .bottompart {
+        gap: 50px;
+        padding: 0 30px;
+    }
+
+    .body .bottompart .about {
+        width: 450px;
+    }
+
+    .body .bottompart .logincard {
+        width: 500px;
+        height: 350px;
+    }
+
+    .body .bottompart .logincard #email,
+    #password {
+        width: 420px;
+    }
+
+    .body .bottompart .logincard .loginbutton {
+        gap: 160px;
+    }
+
+    .password-container {
+        width: 420px;
+    }
+
+    .footnote {
+        padding: 40px 20px;
+    }
+
+    .footnote .republiclogo #republiclogo {
+        width: 140px;
+        height: 140px;
+        margin-right: 30px;
+    }
+
+    .footnote .secondcolumn {
+        margin-left: 40px;
+        margin-right: 40px;
+        width: 280px;
+    }
+}
+
+
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
+        height: 100px;
+        padding: 0 20px;
     }
+
     .navbar .leftside {
-        margin-left: 0;
-        width: 100%;
-        justify-content: center;
+        margin-left: 10px;
+        width: 50%;
     }
+
+    .navbar .leftside .nav-logo {
+        width: 65px;
+        height: 65px;
+        margin-right: 10px;
+    }
+
     .navbar .rightside {
-        margin-left: 0;
-        width: 100%;
-        justify-content: center;
-        margin-top: 20px;
+        margin-left: 20px;
+        width: 50%;
+    }
+
+    .navbar .rightside p {
+        font-size: 10pt;
+    }
+
+    .navbar .rightside #register {
+        width: 110px;
+        height: 40px;
+        font-size: 10pt;
     }
 
     .body .topside {
-        height: auto;
-        padding: 40px 20px;
+        height: 180px;
+        padding: 0 20px;
     }
+
+    .body .topside p {
+        font-size: 13pt;
+    }
+
     .body .topside h1 {
-        font-size: 28pt;
-        width: 100%;
+        font-size: 26pt;
+        width: 90%;
     }
+
     .body .bottompart {
         flex-direction: column;
-        gap: 50px;
         align-items: center;
+        gap: 40px;
+        padding: 0 20px;
     }
+
     .body .bottompart .about {
-        width: 90%;
+        width: 100%;
         max-width: 600px;
     }
-    .body .bottompart .logincard {
-        width: 90%;
-        max-width: 600px;
-        height: auto;
-        padding: 20px;
-    }
-    .body .bottompart .logincard label {
+
+    .body .bottompart .about h4 {
+        font-size: 14pt;
         margin-left: 0;
     }
-    .body .bottompart .logincard #email, #password {
-        width: 100%;
+
+    .body .bottompart .about p {
+        font-size: 12.5pt;
+        margin-left: 0;
     }
+
+    .body .bottompart .logincard {
+        width: 100%;
+        max-width: 600px;
+        margin-right: 0;
+    }
+
+    .body .bottompart .logincard #email,
+    #password {
+        width: 85%;
+    }
+
     .body .bottompart .logincard .loginbutton {
-        gap: 20px;
+        width: 85%;
+        gap: 0;
         justify-content: space-between;
-        flex-direction: column;
-        align-items: center;
+    }
+
+    .password-container {
+        width: 85%;
     }
 
     .footnote {
         flex-direction: column;
         height: auto;
-        padding: 20px;
         align-items: center;
+        text-align: center;
+        gap: 30px;
+        padding: 40px 20px;
     }
+
     .footnote .republiclogo #republiclogo {
         margin-right: 0;
         margin-bottom: 20px;
     }
-    .footnote .firstcolumn, .footnote .secondcolumn, .footnote .thirdcolumn {
+
+    .footnote .secondcolumn {
+        margin-left: 0;
+        margin-right: 0;
         width: 100%;
-        margin: 20px 0;
-        text-align: center;
     }
+}
+
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 90px;
+        padding: 0 15px;
+    }
+
+    .navbar .leftside {
+        margin-left: 5px;
+    }
+
+    .navbar .leftside .nav-logo {
+        width: 55px;
+        height: 55px;
+        margin-right: 8px;
+    }
+
+    .navbar .rightside {
+        margin-left: 10px;
+    }
+
+    .navbar .rightside p {
+        font-size: 8pt;
+        display: none;
+    }
+
+    .navbar .rightside #register {
+        width: 100px;
+        height: 38px;
+        font-size: 9pt;
+    }
+
+    .body .topside {
+        height: 160px;
+        padding: 0 15px;
+    }
+
+    .body .topside p {
+        font-size: 11pt;
+    }
+
+    .body .topside h1 {
+        font-size: 18pt;
+        width: 95%;
+    }
+
+    .body .bottompart {
+        padding: 0 15px;
+    }
+
+    .body .bottompart .about h4 {
+        font-size: 13pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .about p {
+        font-size: 11.5pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .logincard {
+        height: auto;
+        padding: 30px 0;
+    }
+
+    .body .bottompart .logincard label {
+        font-size: 12pt;
+        margin-left: 30px;
+        margin-bottom: 12px;
+    }
+
+    .body .bottompart .logincard #email,
+    #password {
+        width: 90%;
+        height: 50px;
+        font-size: 11pt;
+        margin-bottom: 25px;
+    }
+
+    .body .bottompart .logincard .loginbutton {
+        width: 90%;
+        margin-top: 5px;
+    }
+
+    .body .bottompart .logincard .loginbutton a {
+        font-size: 12pt;
+    }
+
+    .body .bottompart .logincard .loginbutton #login {
+        width: 100px;
+        height: 36px;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 30% auto;
+    }
+
+    .password-container {
+        width: 90%;
+    }
+
+    .password-container .toggle-password {
+        top: 35%;
+    }
+
+    .footnote .republiclogo #republiclogo {
+        width: 120px;
+        height: 120px;
+    }
+
     .footnote .firstcolumn .first p {
         width: 100%;
     }
-
-    .modal-content, .login-success-modal-content, .login-error-modal-content {
-        width: 90%;
-        margin: 20% auto;
-    }
 }
 
-@media (max-width: 480px) {
-    .body .topside h1 {
-        font-size: 24pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
-        font-size: 10pt;
-    }
-
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 11pt;
-    }
-}
 
 @media (max-width: 425px) {
-    /* Further mobile adjustments */
     .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
-    }
-    .navbar .rightside #register {
-        width: 100px;
-        height: 40px;
-        font-size: 10pt;
+        width: 50px;
+        height: 50px;
+        margin-right: 6px;
     }
 
-    .body .topside p {
-        font-size: 14pt;
-    }
     .body .topside h1 {
-        font-size: 20pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
-        font-size: 10pt;
+        font-size: 16pt;
     }
 
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
+    .body .bottompart .logincard label {
+        margin-left: 20px;
     }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
+
+    .body .bottompart .logincard .loginbutton a {
         font-size: 11pt;
+    }
+
+    .footnote .firstcolumn .first h6,
+    .footnote .firstcolumn .second h6,
+    .footnote .secondcolumn .first h6,
+    .footnote .thirdcolumn p {
+        font-size: 11pt;
+    }
+
+    .footnote .firstcolumn .first p,
+    .footnote .firstcolumn .second p,
+    .footnote .secondcolumn p,
+    .footnote .secondcolumn li,
+    .footnote .thirdcolumn li {
+        font-size: 10pt;
     }
 }
 
+
 @media (max-width: 375px) {
-    /* Further mobile adjustments */
-    .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
+    .navbar {
+        height: 85px;
     }
+
+    .navbar .leftside .nav-logo {
+        width: 48px;
+        height: 48px;
+        margin-right: 5px;
+    }
+
     .navbar .rightside #register {
-        width: 100px;
-        height: 40px;
-        font-size: 10pt;
+        width: 90px;
+        height: 36px;
+        font-size: 8.5pt;
+    }
+
+    .body .topside {
+        height: 150px;
     }
 
     .body .topside p {
-        font-size: 14pt;
-    }
-    .body .topside h1 {
-        font-size: 17pt;
-    }
-    .body .bottompart .about h4 {
-        font-size: 14pt;
-    }
-    .body .bottompart .about p {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .logincard #email, #password {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart .logincard .loginbutton #login {
-        width: 100px;
-        height: 35px;
         font-size: 10pt;
     }
 
-    /* Footnote: Smaller elements */
-    .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
+    .body .topside h1 {
+        font-size: 14pt;
     }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
+
+    .body .bottompart .about h4 {
+        font-size: 12pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .about p {
+        font-size: 11pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .logincard label {
+        font-size: 11.5pt;
+    }
+
+    .body .bottompart .logincard #email,
+    #password {
+        height: 48px;
+        font-size: 10.5pt;
+    }
+
+    .body .bottompart .logincard .loginbutton a {
+        font-size: 10.5pt;
+    }
+
+    .body .bottompart .logincard .loginbutton #login {
+        width: 90px;
         font-size: 10pt;
     }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
+
+    .password-container {
+        width: 92%;
+    }
+
+    .footnote .republiclogo #republiclogo {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+
+@media (max-width: 366px) {
+    .navbar {
+        height: 80px;
+    }
+
+    .navbar .leftside .nav-logo {
+        width: 45px;
+        height: 45px;
+        margin-right: 4px;
+    }
+
+    .navbar .rightside #register {
+        width: 85px;
+        height: 34px;
+        font-size: 8pt;
+    }
+
+    .body .topside {
+        height: 140px;
+    }
+
+    .body .topside p {
+        font-size: 9pt;
+    }
+
+    .body .topside h1 {
+        font-size: 14pt;
+    }
+
+    .body .bottompart .about h4 {
+        font-size: 11.5pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .about p {
+        font-size: 10.5pt;
+        margin-left: 0;
+    }
+
+    .body .bottompart .logincard {
+        padding: 25px 0;
+    }
+
+    .body .bottompart .logincard label {
         font-size: 11pt;
+        margin-left: 15px;
+    }
+
+    .body .bottompart .logincard #email,
+    #password {
+        width: 92%;
+        height: 46px;
+        font-size: 10pt;
+        margin-bottom: 20px;
+    }
+
+    .body .bottompart .logincard .loginbutton {
+        width: 92%;
+    }
+
+    .body .bottompart .logincard .loginbutton a {
+        font-size: 10pt;
+    }
+
+    .body .bottompart .logincard .loginbutton #login {
+        width: 85px;
+        height: 34px;
+        font-size: 9.5pt;
+    }
+
+    .password-container {
+        width: 92%;
+    }
+
+    .footnote .republiclogo #republiclogo {
+        width: 90px;
+        height: 90px;
+    }
+
+    .footnote .firstcolumn .first h6,
+    .footnote .firstcolumn .second h6,
+    .footnote .secondcolumn .first h6,
+    .footnote .thirdcolumn p {
+        font-size: 10pt;
+    }
+
+    .footnote .firstcolumn .first p,
+    .footnote .firstcolumn .second p,
+    .footnote .secondcolumn p,
+    .footnote .secondcolumn li,
+    .footnote .thirdcolumn li {
+        font-size: 9pt;
     }
 }

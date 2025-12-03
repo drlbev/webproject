@@ -53,6 +53,133 @@ document.querySelectorAll('input, select').forEach(input => {
     });
 });
 
+//real-time email validation
+const emailInput = document.getElementById('email');
+const emailValidation = document.getElementById('email-validation');
+
+if (emailInput && emailValidation) {
+    emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        
+        if (email === '') {
+            this.classList.remove('valid', 'invalid');
+            emailValidation.textContent = '';
+            emailValidation.className = 'validation-message';
+            return;
+        }
+        
+        if (validateEmail(email)) {
+            this.classList.remove('invalid');
+            this.classList.add('valid');
+            emailValidation.textContent = '';
+            emailValidation.className = 'validation-message success';
+        } else {
+            this.classList.remove('valid');
+            this.classList.add('invalid');
+            emailValidation.textContent = '';
+            emailValidation.className = 'validation-message error';
+        }
+    });
+}
+
+//real-time password validation
+const passwordInput = document.getElementById('password');
+const reqLowercase = document.getElementById('req-lowercase');
+const reqUppercase = document.getElementById('req-uppercase');
+const reqNumber = document.getElementById('req-number');
+const reqSpecial = document.getElementById('req-special');
+const reqLength = document.getElementById('req-length');
+
+if (passwordInput) {
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        
+        if (password === '') {
+            this.classList.remove('valid', 'invalid');
+            [reqLowercase, reqUppercase, reqNumber, reqSpecial, reqLength].forEach(req => {
+                if (req) req.classList.remove('met', 'unmet');
+            });
+            return;
+        }
+        
+        const requirements = {
+            lowercase: /[a-z]/.test(password),
+            uppercase: /[A-Z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[~`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+            length: password.length >= 8
+        };
+        
+        //update requirement indicators
+        if (reqLowercase) {
+            reqLowercase.classList.toggle('met', requirements.lowercase);
+            reqLowercase.classList.toggle('unmet', !requirements.lowercase);
+        }
+        if (reqUppercase) {
+            reqUppercase.classList.toggle('met', requirements.uppercase);
+            reqUppercase.classList.toggle('unmet', !requirements.uppercase);
+        }
+        if (reqNumber) {
+            reqNumber.classList.toggle('met', requirements.number);
+            reqNumber.classList.toggle('unmet', !requirements.number);
+        }
+        if (reqSpecial) {
+            reqSpecial.classList.toggle('met', requirements.special);
+            reqSpecial.classList.toggle('unmet', !requirements.special);
+        }
+        if (reqLength) {
+            reqLength.classList.toggle('met', requirements.length);
+            reqLength.classList.toggle('unmet', !requirements.length);
+        }
+        
+        //update input border
+        const allMet = Object.values(requirements).every(Boolean);
+        if (allMet) {
+            this.classList.remove('invalid');
+            this.classList.add('valid');
+        } else {
+            this.classList.remove('valid');
+            this.classList.add('invalid');
+        }
+        
+        //trigger confirm password validation if it has a value
+        const confirmpwInput = document.getElementById('confirmpw');
+        if (confirmpwInput && confirmpwInput.value) {
+            confirmpwInput.dispatchEvent(new Event('input'));
+        }
+    });
+}
+
+//real-time confirm password validation
+const confirmpwInput = document.getElementById('confirmpw');
+const confirmpwValidation = document.getElementById('confirmpw-validation');
+
+if (confirmpwInput && confirmpwValidation) {
+    confirmpwInput.addEventListener('input', function() {
+        const confirmPassword = this.value;
+        const password = document.getElementById('password').value;
+        
+        if (confirmPassword === '') {
+            this.classList.remove('valid', 'invalid');
+            confirmpwValidation.textContent = '';
+            confirmpwValidation.className = 'validation-message';
+            return;
+        }
+        
+        if (confirmPassword === password) {
+            this.classList.remove('invalid');
+            this.classList.add('valid');
+            confirmpwValidation.textContent = '✓ Passwords match';
+            confirmpwValidation.className = 'validation-message success';
+        } else {
+            this.classList.remove('valid');
+            this.classList.add('invalid');
+            confirmpwValidation.textContent = '✗ Passwords do not match';
+            confirmpwValidation.className = 'validation-message error';
+        }
+    });
+}
+
 function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -184,7 +311,7 @@ async function registerUser() {
             email: formData.credentials.email,
             password: formData.credentials.password,
             options: {
-                emailRedirectTo: `${window.location.origin}/user-landing.html`,
+                emailRedirectTo: `${window.location.origin}/user/user-landing.html`,
                 data: {
                     firstName: formData.personal.firstName,
                     lastName: formData.personal.lastName,
@@ -282,7 +409,7 @@ function showEmailConfirmationModal() {
     document.head.appendChild(modalStyle);
 
     document.getElementById('okayBtn').addEventListener('click', () => {
-        window.location.href = 'user-landing.html';
+        window.location.href = '/user/user-landing.html';
     });
 }
 
@@ -304,7 +431,7 @@ function showSuccessModal() {
 
     //add click handler
     document.getElementById('okayBtn').addEventListener('click', () => {
-        window.location.href = 'user-landing.html';
+        window.location.href = '/user/user-landing.html';
     });
 }
 
@@ -394,11 +521,11 @@ nextBtns.forEach(btn => {
     });
 });
 
-//show modal for pending confirmation
+// Show modal for pending confirmation with resend that invalidates old link
 function showPendingConfirmationModal(email, hoursRemaining) {
     const modalHTML = `
         <div id="pendingConfirmModal" class="modal" style="display: block;">
-            <div class="modal-content" style="text-align: center; padding: 40px; max-width: 500px; margin: 100px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div class="modal-content" style="text-align: center; padding: 40px; max-width: 500px; margin: 50px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                 <div style="font-size: 70px; margin-bottom: 20px;">⏳</div>
                 <h2 style="color: #f59e0b; margin-bottom: 15px;">Account Pending Activation</h2>
                 <p style="color: #666; font-size: 16px; margin-bottom: 10px;">
@@ -408,15 +535,13 @@ function showPendingConfirmationModal(email, hoursRemaining) {
                     ${email}
                 </p>
                 <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 25px; text-align: left;">
-                    <p style="color: #92400e; font-size: 14px; margin: 0;">
-                        <strong>📌 Please check your email</strong> (and spam folder) for the confirmation link.
-                    </p>
-                    <p style="color: #92400e; font-size: 13px; margin: 10px 0 0 0;">
-                        Link expires in <strong>${hoursRemaining} hours</strong>. After that, you can register again.
+                    <p style="color: #92400e; font-size: 14px; margin: 0; line-height: 1.6;">
+                        <strong>📌 Please check your email</strong> (and spam folder) for the confirmation link.<br>
+                        <span style="font-size: 13px; margin-top: 8px; display: block;">The link will expire for security. Click "Resend" to get a new one.</span>
                     </p>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button id="resendEmailBtn" style="background: #3b82f6; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;">
+                    <button id="resendEmailBtn" style="background: #3b82f6; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.3s;">
                         RESEND EMAIL
                     </button>
                     <button id="closeModalBtn" style="background: #6b7280; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;">
@@ -439,6 +564,16 @@ function showPendingConfirmationModal(email, hoursRemaining) {
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
             z-index: 9999;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #pendingConfirmModal .modal-content {
+            margin: 20px auto !important;
+        }
+        #resendEmailBtn:hover {
+            background: #2563eb !important;
         }
     `;
     document.head.appendChild(modalStyle);
@@ -449,18 +584,35 @@ function showPendingConfirmationModal(email, hoursRemaining) {
         btn.textContent = 'SENDING...';
 
         try {
+            // Resend with proper redirect URL - this invalidates the old token
             const { error } = await supabaseClient.auth.resend({
                 type: 'signup',
-                email: email
+                email: email,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/user/user-landing.html`
+                }
             });
 
             if (error) throw error;
 
-            alert('Email resent! Check your inbox.');
             document.getElementById('pendingConfirmModal').remove();
+            
+            // Show success message
+            showResendSuccessModal(email);
 
         } catch (error) {
-            alert('Error: ' + error.message);
+            console.error('Resend error:', error);
+            
+            let errorMsg = 'Error: ';
+            if (error.message.includes('email rate limit') || error.message.includes('rate limit')) {
+                errorMsg = '⏱️ Too many requests. Please wait 60 seconds and try again.';
+            } else if (error.message.includes('User not found')) {
+                errorMsg = '📧 No account found. Please try registering again.';
+            } else {
+                errorMsg += error.message;
+            }
+            
+            alert(errorMsg);
             btn.disabled = false;
             btn.textContent = 'RESEND EMAIL';
         }
@@ -468,6 +620,56 @@ function showPendingConfirmationModal(email, hoursRemaining) {
 
     document.getElementById('closeModalBtn').addEventListener('click', () => {
         document.getElementById('pendingConfirmModal').remove();
+    });
+}
+
+// NEW: Show success modal after resend
+function showResendSuccessModal(email) {
+    const modalHTML = `
+        <div id="resendSuccessModal" class="modal" style="display: block;">
+            <div class="modal-content" style="text-align: center; padding: 40px; max-width: 500px; margin: 100px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                <div style="font-size: 70px; color: #10b981; margin-bottom: 20px;">✅</div>
+                <h2 style="color: #10b981; margin-bottom: 15px;">New Confirmation Email Sent!</h2>
+                <p style="color: #666; font-size: 16px; margin-bottom: 10px;">
+                    We've sent a fresh confirmation link to:
+                </p>
+                <p style="color: #1e40af; font-weight: bold; font-size: 18px; margin-bottom: 25px;">
+                    ${email}
+                </p>
+                <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 15px; margin-bottom: 25px; text-align: left;">
+                    <p style="color: #1e40af; font-size: 14px; margin: 0; line-height: 1.6;">
+                        <strong>🔒 Important:</strong> The previous confirmation link has been invalidated for security.<br>
+                        <span style="font-size: 13px; margin-top: 8px; display: block;">Please use only the new link from your latest email.</span>
+                    </p>
+                </div>
+                <button id="okayResendBtn" style="background: #3b82f6; color: white; border: none; padding: 14px 50px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.3s;">
+                    OKAY
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modalStyle = document.createElement('style');
+    modalStyle.textContent = `
+        #resendSuccessModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+        #okayResendBtn:hover {
+            background: #2563eb !important;
+        }
+    `;
+    document.head.appendChild(modalStyle);
+
+    document.getElementById('okayResendBtn').addEventListener('click', () => {
+        document.getElementById('resendSuccessModal').remove();
     });
 }
 
@@ -498,5 +700,121 @@ if (doneBtn) {
 
         //register user
         registerUser();
+    });
+}
+
+//consent form modal handler
+const viewConsentFormLink = document.getElementById('viewConsentForm');
+if (viewConsentFormLink) {
+    viewConsentFormLink.addEventListener('click', () => {
+        showConsentFormModal();
+    });
+}
+
+//show consent form modal
+function showConsentFormModal() {
+    const modalHTML = `
+        <div id="consentFormModal" class="modal" style="display: block;">
+            <div class="modal-content" style="padding: 40px; max-width: 700px; margin: 50px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;">
+                <h2 style="color: #1e15b6; margin-bottom: 20px; text-align: center;">DATA PRIVACY CONSENT FORM</h2>
+                <h3 style="color: #3f761f; margin-bottom: 15px; text-align: center;">Barangay Vito Complaint and Incident Reporting System</h3>
+                
+                <div style="color: #545454; font-size: 13pt; line-height: 1.8; text-align: justify;">
+                    <p style="margin-bottom: 15px;">
+                        In compliance with Republic Act No. 10173, otherwise known as the Data Privacy Act of 2012, 
+                        and its implementing rules and regulations, this Consent Form is being provided to inform you 
+                        how your personal information will be collected, used, stored, and protected by the 
+                        <strong>Barangay Vito Complaint and Incident Reporting System</strong>.
+                    </p>
+
+                    <h4 style="color: #1e15b6; margin-top: 25px; margin-bottom: 10px;">Purpose of Data Collection</h4>
+                    <p style="margin-bottom: 15px;">
+                        The personal information you provide will be used solely for the following purposes:
+                    </p>
+                    <ul style="margin-left: 25px; margin-bottom: 15px;">
+                        <li>Registration and account creation in the system</li>
+                        <li>Processing and managing complaints and incident reports</li>
+                        <li>Communication regarding your filed complaints or incidents</li>
+                        <li>Statistical analysis and improvement of barangay services</li>
+                        <li>Compliance with legal and regulatory requirements</li>
+                    </ul>
+
+                    <h4 style="color: #1e15b6; margin-top: 25px; margin-bottom: 10px;">Information to be Collected</h4>
+                    <p style="margin-bottom: 15px;">
+                        The system will collect the following personal information:
+                    </p>
+                    <ul style="margin-left: 25px; margin-bottom: 15px;">
+                        <li>Email address and contact number</li>
+                        <li>Full name (first name, middle name, last name, suffix)</li>
+                        <li>Date of birth and gender</li>
+                        <li>Complete current address</li>
+                        <li>Details of complaints or incidents you report</li>
+                    </ul>
+
+                    <h4 style="color: #1e15b6; margin-top: 25px; margin-bottom: 10px;">Data Protection and Security</h4>
+                    <p style="margin-bottom: 15px;">
+                        Barangay Vito is committed to protecting your personal information. We implement appropriate 
+                        technical and organizational measures to ensure the security of your data against unauthorized 
+                        access, alteration, disclosure, or destruction.
+                    </p>
+
+                    <h4 style="color: #1e15b6; margin-top: 25px; margin-bottom: 10px;">Your Rights as a Data Subject</h4>
+                    <p style="margin-bottom: 15px;">
+                        Under the Data Privacy Act, you have the right to:
+                    </p>
+                    <ul style="margin-left: 25px; margin-bottom: 15px;">
+                        <li>Be informed about the collection and processing of your personal data</li>
+                        <li>Access your personal information held by the system</li>
+                        <li>Correct inaccurate or outdated personal information</li>
+                        <li>Object to the processing of your personal data</li>
+                        <li>Request deletion of your personal information, subject to legal requirements</li>
+                        <li>File a complaint with the National Privacy Commission</li>
+                    </ul>
+
+                    <h4 style="color: #1e15b6; margin-top: 25px; margin-bottom: 10px;">Consent</h4>
+                    <p style="margin-bottom: 15px;">
+                        By registering and using this system, you hereby consent to the collection, use, storage, 
+                        and processing of your personal information as described in this form. You acknowledge that 
+                        you have read and understood the terms stated herein.
+                    </p>
+
+                    <p style="margin-top: 25px; margin-bottom: 15px;">
+                        For questions or concerns regarding data privacy, you may contact:
+                    </p>
+                    <p style="margin-left: 25px; margin-bottom: 5px;"><strong>Barangay Vito</strong></p>
+                    <p style="margin-left: 25px; margin-bottom: 5px;">Contact No.: 0942-744-2287 / 402-0139</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button id="closeConsentBtn" style="background: #1e15b6; color: white; border: none; padding: 14px 50px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.3s;">
+                        I UNDERSTAND
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modalStyle = document.createElement('style');
+    modalStyle.textContent = `
+        #consentFormModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            overflow-y: auto;
+        }
+        #closeConsentBtn:hover {
+            background: #161175 !important;
+        }
+    `;
+    document.head.appendChild(modalStyle);
+
+    document.getElementById('closeConsentBtn').addEventListener('click', () => {
+        document.getElementById('consentFormModal').remove();
     });
 }

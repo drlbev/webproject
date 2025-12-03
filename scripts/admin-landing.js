@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             console.log('Redirecting to dashboard...');
-            window.location.href = 'admin-dashboard.html'
+            window.location.href = '/admin/admin-dashboard.html'
         }, 1500)
 
         } catch (error) {
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (user) {
                 console.log('Valid session found, redirecting to dashboard...')
-                window.location.href = 'admin-dashboard.html'
+                window.location.href = '/admin/admin-dashboard.html'
             } else {
                 console.log('Invalid session, clearing...')
                 clearAdminSession()

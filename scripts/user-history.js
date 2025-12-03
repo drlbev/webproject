@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         if (!userDataString) {
             console.error('No session found');
-            window.location.href = 'user-landing.html';
+            window.location.href = '/user/user-landing.html';
             return;
         }
 
@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Error loading user:', error);
-        window.location.href = 'user-landing.html';
+        window.location.href = '/user/user-landing.html';
     }
 });
 
@@ -733,7 +733,7 @@ if (logoutBtn) {
             if (error) throw error;
             
             sessionStorage.removeItem('loggedInUser');
-            window.location.href = 'user-landing.html';
+            window.location.href = '/user/user-landing.html';
         } catch (error) {
             console.error('Logout error:', error);
             alert('Error logging out');

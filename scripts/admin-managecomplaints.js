@@ -101,7 +101,7 @@ function renderTable() {
                 <td>${item ? item.respondent || '' : ''}</td>
                 <td>${item ? item.status || '' : ''}</td>
                 <td>${item ? item.lastupdated || '' : ''}</td>
-                <td>${item ? `<a href="admin-viewdetails-comp.html?id=${item.vci_id}" class="view-link">View Details</a>` : ''}</td>
+                <td>${item ? `<a href="/admin/admin-viewdetails-comp.html?id=${item.vci_id}" class="view-link">View Details</a>` : ''}</td>
             </tr>
         `;
         tbody.innerHTML += row;

@@ -16,7 +16,7 @@ async function checkAuth() {
 async function requireAuth() {
   const user = await checkAuth()
   if (!user) {
-    window.location.href = 'user-landing.html'
+    window.location.href = '/user/user-landing.html'
   }
   return user
 }

@@ -58,6 +58,7 @@ body {
     height: 45px;
     font-size: 11pt;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .navbar .rightside #login:hover {
@@ -135,13 +136,6 @@ body {
     margin-top: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
-}
-
-.body .bottompart.active .credential p {
-    color: #737373; 
-    font-size: 10.3pt; 
-    font-style: italic; 
-    margin-left: 40px;
 }
 
 .body .bottompart .personal {
@@ -350,9 +344,65 @@ input.error, select.error {
     border-color: #ff0000 !important;
 }
 
+input.valid {
+    border-color: #10b981 !important;
+}
+
+input.invalid {
+    border-color: #ff0000 !important;
+}
+
 input:focus, select:focus {
     outline: none;
     border-color: #1e15b6 !important;
+}
+
+.validation-message {
+    font-size: 11pt;
+    margin-top: 5px;
+    margin-left: 40px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.validation-message.error {
+    color: #ff0000;
+}
+
+.validation-message.success {
+    color: #10b981;
+}
+
+.password-requirements {
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+
+.password-requirements p {
+    color: #737373;
+    font-size: 10.3pt;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.password-requirements ul {
+    margin-bottom: 0;
+}
+
+.password-requirements li {
+    color: #737373;
+    font-size: 10.3pt;
+    font-style: italic;
+    margin-left: 70px;
+    transition: color 0.3s;
+}
+
+.password-requirements li.met {
+    color: #10b981;
+}
+
+.password-requirements li.unmet {
+    color: #ff0000;
 }
 
 /* Animation for error shake */
@@ -470,404 +520,387 @@ input:focus, select:focus {
     text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
-    }
-    .navbar .leftside {
-        margin-left: 0;
-        width: 100%;
-        justify-content: center;
-    }
+/* Tablet Landscape - 1024px */
+@media (max-width: 1024px) {
     .navbar .rightside {
-        margin-left: 0;
-        width: 100%;
-        justify-content: center;
-        margin-top: 20px;
+        margin-left: 100px;
     }
-
-    .body .topside {
-        height: auto;
-        padding: 20px;
-    }
+    
     .body .topside h1 {
-        font-size: 28pt;
-        width: 100%;
+        font-size: 32pt;
+        width: 80%;
     }
-
-    .body .bottompart .credential,
-    .body .bottompart .personal,
-    .body .bottompart .oathcard {
-        width: 100%;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 20px;
-    }
-
-    .body .bottompart .credential #email, #phonenum,
-    .body .bottompart .personal #address {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-    .body .bottompart .credential #password, #confirmpw{
-        width: 558px;
-    }
-    .toggle-password {
-        right: 20px;
-    }
-    .body .bottompart .personal .row {
-        flex-direction: column;
-        gap: 10px;
-        margin-left: 0;
-    }
-    .body .bottompart .personal .row #fname, #lname, #mname, #suffix, #dob, #gender {
-        width: 100%;
-    }
-    .body .bottompart .personal .row4 { 
-        margin-left: 0;
-    }
-    .body .bottompart .personal .row4 label {
-        margin-left: 0;
-    }
-    .body .bottompart .credential label,
-    .body .bottompart .personal .row .first label,
-    .body .bottompart .personal .row .second label {
-        margin-left: 0;
-    }
-    .body .bottompart li {
-        margin-left: 20px;
-    }
-    .body .bottompart .credentialbutton,
-    .body .bottompart .personalbutton {
-        margin-left: 0;
-        justify-content: space-between;
-    }
-    .body .bottompart.active .credential p {
-        margin-left: 0;
-    }
-
+    
     .footnote {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
-        align-items: center;
+        padding-left: 20px;
+        padding-right: 20px;
     }
+    
     .footnote .republiclogo #republiclogo {
-        margin-right: 0;
-        margin-bottom: 20px;
+        width: 140px;
+        height: 140px;
+        margin-right: 30px;
     }
-    .footnote .firstcolumn, .footnote .secondcolumn, .footnote .thirdcolumn {
-        width: 100%;
-        margin: 20px 0;
-        text-align: center;
-    }
-    .footnote .firstcolumn .first p {
-        width: 100%;
+    
+    .footnote .secondcolumn {
+        margin-left: 40px;
+        margin-right: 40px;
+        width: 280px;
     }
 }
 
-@media (max-width: 480px) {
+/* Tablet Portrait - 768px */
+@media (max-width: 768px) {
+    .navbar {
+        height: 100px;
+    }
+    
+    .navbar .leftside {
+        margin-left: 20px;
+    }
+    
     .navbar .leftside .nav-logo {
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
         margin-right: 10px;
     }
+    
+    .navbar .rightside {
+        margin-left: 50px;
+    }
+    
+    .navbar .rightside p {
+        font-size: 10pt;
+    }
+    
     .navbar .rightside #login {
-        width: 100px;
+        width: 110px;
         height: 40px;
         font-size: 10pt;
     }
-
-    .body .topside p {
-        font-size: 14pt;
+    
+    .body .topside {
+        height: 180px;
     }
+    
+    .body .topside p {
+        font-size: 13pt;
+    }
+    
     .body .topside h1 {
-        font-size: 20pt;
+        font-size: 26pt;
+        width: 85%;
+    }
+
+    .body .bottompart.active {
+        margin: 0 100px 50px;
     }
     
     .body .bottompart .credential,
     .body .bottompart .personal,
     .body .bottompart .oathcard {
+        width: 100%;
+        padding: 30px 20px;
+    }
+    
+    .body .bottompart .credential #email,
+    .body .bottompart .credential #phonenum,
+    .body .bottompart .personal #address {
         width: 90%;
-        max-width: 480px;
-        padding: 15px;
-    }
-    .body .bottompart .header h4 {
-        font-size: 12pt;
-        margin-left: 25px;
-    }
-    .body .bottompart .header p {
-        font-size: 11pt;
-        margin-left: 25px;
-    }
-    .body .bottompart .credential label,
-    .body .bottompart .personal .row .first label,
-    .body .bottompart .personal .row .second label,
-    .body .bottompart .personal .row4 label,
-    .body .bottompart .oathcard p,
-    .body .bottompart .oathcard label {
-        font-size: 12pt;
-    }
-    .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
-    .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
-        height: 45px;
-        font-size: 11pt;
-    }
-    .body .bottompart li {
-        font-size: 9pt;
-        margin-left: 15px;
-    }
-    .body .bottompart .credentialbutton button,
-    .body .bottompart .personalbutton button,
-    .body .bottompart .oathbutton #done {
-        width: 80px;
-        height: 35px;
-        font-size: 10pt;
-    }
-    .body .bottompart .credential #password, #confirmpw{
-        width: 400px;
-    }
-    .toggle-password {
-        right: 175px;
     }
 
+    .body .bottompart .credential #password,
+    .body .bottompart .credential #confirmpw {
+        width: 100%;
+    }
+    
+    .password-container {
+        width: 90%;
+    }
+    
+    .body .bottompart .credential label,
+    .body .bottompart .credentialbutton,
+    .body .bottompart .personalbutton {
+        margin-left: 20px;
+    }
+    
+    .body .bottompart .personal .row {
+        margin-left: 20px;
+        gap: 10px;
+    }
+    
+    .body .bottompart .personal .row #fname,
+    .body .bottompart .personal .row #lname,
+    .body .bottompart .personal .row #mname,
+    .body .bottompart .personal .row #suffix,
+    .body .bottompart .personal .row #dob,
+    .body .bottompart .personal .row #gender {
+        width: 100%;
+    }
+    
+    .body .bottompart .personal .row4 label {
+        margin-left: 20px;
+    }
+    
+    .validation-message,
+    .password-requirements {
+        margin-left: 20px;
+    }
+    
+    .footnote {
+        flex-direction: column;
+        height: auto;
+        padding: 30px 20px;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .footnote .republiclogo {
+        margin-bottom: 30px;
+    }
+    
     .footnote .republiclogo #republiclogo {
-        width: 120px;
-        height: 120px;
+        margin-right: 0;
     }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt;
+    
+    .footnote .firstcolumn,
+    .footnote .secondcolumn,
+    .footnote .thirdcolumn {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 30px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 11pt;
+    
+    .footnote .firstcolumn .first,
+    .footnote .firstcolumn .second {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footnote .firstcolumn .first p {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .footnote .secondcolumn .first,
+    .footnote .secondcolumn .second {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footnote .secondcolumn p,
+    .footnote .thirdcolumn p {
+        text-align: center;
+    }
+    
+    .footnote .secondcolumn ul,
+    .footnote .thirdcolumn ul {
+        list-style-position: inside;
     }
 }
 
-@media (max-width: 425px) {
+/* Mobile Large - 480px */
+@media (max-width: 480px) {
+    .navbar {
+        height: 90px;
+        padding: 0 10px;
+    }
+    
+    .navbar .leftside {
+        margin-left: 10px;
+        width: 50%;
+    }
+    
     .navbar .leftside .nav-logo {
         width: 55px;
         height: 55px;
         margin-right: 8px;
     }
+    
+    .navbar .rightside {
+        margin-left: 20px;
+        width: 50%;
+    }
+    
+    .navbar .rightside p {
+        font-size: 8pt;
+    }
+    
     .navbar .rightside #login {
         width: 90px;
-        height: 38px;
+        height: 35px;
         font-size: 9pt;
     }
-
-    .body .topside p {
-        font-size: 13pt;
+    
+    .body .topside {
+        height: 160px;
+        padding: 20px;
     }
+    
+    .body .topside p {
+        font-size: 11pt;
+    }
+    
     .body .topside h1 {
         font-size: 20pt;
+        width: 95%;
     }
 
+    .body .bottompart.active {
+        margin: 0 50px 50px;
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 12pt;
+        margin-bottom: 20px;
+    }
+    
+    .body .bottompart .header p {
+        font-size: 11pt;
+    }
+    
     .body .bottompart .credential,
     .body .bottompart .personal,
     .body .bottompart .oathcard {
-        max-width: 425px;
-        padding: 12px;
+        width: 100%;
+        padding: 25px 15px;
     }
-    .body .bottompart .header h4 {
-        font-size: 11pt;
-    }
-    .body .bottompart .header p {
-        font-size: 10pt;
-    }
+    
     .body .bottompart .credential label,
-    .body .bottompart .personal .row .first label,
-    .body .bottompart .personal .row .second label,
-    .body .bottompart .personal .row4 label,
     .body .bottompart .oathcard p,
-    .body .bottompart .oathcard label {
-        font-size: 11pt;
+    .body .bottompart .oathcard label,
+    .body .bottompart .oathcard a {
+        font-size: 12pt;
     }
-    .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
-    .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
-        height: 42px;
-        font-size: 10pt;
+    
+    .body .bottompart .personal .row {
+        flex-direction: column;
+        margin-left: 15px;
+        gap: 20px;
     }
-    .body .bottompart li {
-        font-size: 8pt;
-        margin-left: 12px;
-    }
-    .body .bottompart .credentialbutton button,
-    .body .bottompart .personalbutton button,
-    .body .bottompart .oathbutton #done {
-        width: 75px;
-        height: 32px;
-        font-size: 9pt;
-    }
-    .body .bottompart .credential #password, #confirmpw{
-        width: 357px;
-    }
-    .toggle-password {
-        right: 220px;
+    
+    .body .bottompart .personal .row #fname,
+    .body .bottompart .personal .row #lname,
+    .body .bottompart .personal .row #mname,
+    .body .bottompart .personal .row #suffix,
+    .body .bottompart .personal .row #dob,
+    .body .bottompart .personal .row #gender {
+        width: 90%;
     }
 
-    .footnote .republiclogo #republiclogo {
-        width: 100px;
-        height: 100px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 9pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 10pt;
+    .password-requirements li.met {
+        margin-left: 30px;
     }
 }
 
-@media (max-width: 375px) {
+/* Mobile Medium - 425px */
+@media (max-width: 425px) {
     .navbar .leftside .nav-logo {
         width: 50px;
         height: 50px;
-        margin-right: 5px;
+        margin-right: 6px;
     }
-    .navbar .rightside #login {
-        width: 80px;
-        height: 35px;
-        font-size: 8pt;
+    
+    .navbar .rightside p {
+        font-size: 7.5pt;
     }
-
-    .body .topside p {
-        font-size: 12pt;
-    }
+    
     .body .topside h1 {
         font-size: 18pt;
     }
 
-    .body .bottompart .credential,
-    .body .bottompart .personal,
-    .body .bottompart .oathcard {
-        max-width: 375px;
-        padding: 10px;
+    .body .bottompart.active {
+        margin: 0 40px 40px;
     }
-    .body .bottompart .header h4 {
-        font-size: 10pt;
-    }
-    .body .bottompart .header p {
-        font-size: 9pt;
-    }
-    .body .bottompart .credential label,
-    .body .bottompart .personal .row .first label,
-    .body .bottompart .personal .row .second label,
-    .body .bottompart .personal .row4 label,
-    .body .bottompart .oathcard p,
-    .body .bottompart .oathcard label {
-        font-size: 10pt;
-    }
-    .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
-    .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
-        height: 40px;
-        font-size: 9pt;
-    }
-    .body .bottompart li {
-        font-size: 7pt;
-        margin-left: 10px;
-    }
-    .body .bottompart .credentialbutton button,
-    .body .bottompart .personalbutton button,
-    .body .bottompart .oathbutton #done {
-        width: 70px;
-        height: 30px;
-        font-size: 8pt;
-    }
-    .body .bottompart .credential #password, #confirmpw{
-        width: 315px;
-    }
-    .toggle-password {
-        right: 260px;
-    }
-
-    .footnote .republiclogo #republiclogo {
-        width: 80px;
-        height: 80px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 8pt;
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 9pt;
+    
+    .body .bottompart .credentialbutton,
+    .body .bottompart .personalbutton {
+        margin-left: 15px;
     }
 }
 
+/* Mobile Small - 375px */
+@media (max-width: 375px) {
+    .navbar {
+        height: 80px;
+    }
+    
+    .navbar .leftside .nav-logo {
+        width: 45px;
+        height: 45px;
+        margin-right: 5px;
+    }
+    
+    .navbar .rightside p {
+        font-size: 7pt;
+    }
+    
+    .navbar .rightside #login {
+        width: 80px;
+        height: 32px;
+        font-size: 8pt;
+    }
+    
+    .body .topside {
+        height: 140px;
+    }
+    
+    .body .topside p {
+        font-size: 10pt;
+    }
+    
+    .body .topside h1 {
+        font-size: 16pt;
+    }
+    
+    .body .bottompart .header h4 {
+        font-size: 11pt;
+    }
+    
+    .body .bottompart .header p {
+        font-size: 10pt;
+    }
+    
+    .body .bottompart .credentialbutton #back,
+    .body .bottompart .credentialbutton #next,
+    .body .bottompart .personalbutton #back,
+    .body .bottompart .personalbutton #next,
+    .body .bottompart .oathbutton #done {
+        width: 75px;
+        height: 36px;
+        font-size: 10pt;
+    }
+}
+
+/* Mobile Extra Small - 366px */
 @media (max-width: 366px) {
     .navbar .leftside .nav-logo {
-        width: 48px;
-        height: 48px;
-        margin-right: 4px;
+        width: 42px;
+        height: 42px;
     }
+    
+    .navbar .rightside p {
+        display: none;
+    }
+    
     .navbar .rightside #login {
-        width: 78px;
-        height: 33px;
-        font-size: 10pt; 
+        margin-left: 0;
     }
-
-    .body .topside p {
-        font-size: 11.5pt;
-    }
+    
     .body .topside h1 {
-        font-size: 17pt;
+        font-size: 15pt;
     }
-
+    
     .body .bottompart .credential,
     .body .bottompart .personal,
     .body .bottompart .oathcard {
-        max-width: 366px;
-        padding: 9px;
-    }
-    .body .bottompart .header h4 {
-        font-size: 10pt; 
-    }
-    .body .bottompart .header p {
-        font-size: 10pt; 
-    }
-    .body .bottompart .credential label,
-    .body .bottompart .personal .row .first label,
-    .body .bottompart .personal .row .second label,
-    .body .bottompart .personal .row4 label,
-    .body .bottompart .oathcard p,
-    .body .bottompart .oathcard label {
-        font-size: 10pt; 
-    }
-    .body .bottompart .credential #email, #password, #confirmpw, #phonenum,
-    .body .bottompart .personal #fname, #lname, #mname, #suffix, #dob, #gender, #address {
-        height: 38px;
-        font-size: 10pt;  
-    }
-    .body .bottompart.active .credential p {
-        font-size: 9pt;
-    }
-    .body .bottompart li {
-        font-size: 9pt;  
-        margin-left: 15px;
-    }
-    .body .bottompart .credentialbutton button,
-    .body .bottompart .personalbutton button,
-    .body .bottompart .oathbutton #done {
-        width: 68px;
-        height: 28px;
-        font-size: 10pt;  
-    }
-    .body .bottompart .credential #password, #confirmpw{
-        width: 308px;
-    }
-    .toggle-password {
-        right: 268px;
-    }
-
-    .footnote .republiclogo #republiclogo {
-        width: 75px;
-        height: 75px;
-    }
-    .footnote .firstcolumn .first p, .footnote .firstcolumn .second p, .footnote .secondcolumn p, .footnote .secondcolumn li, .footnote .thirdcolumn li {
-        font-size: 10pt; 
-    }
-    .footnote .firstcolumn h6, .footnote .secondcolumn h6, .footnote .thirdcolumn p {
-        font-size: 10pt; 
+        width: 98%;
+        padding: 20px 12px;
     }
 }

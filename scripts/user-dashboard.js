@@ -6,13 +6,12 @@ window.onload = function() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const burgerMenu = document.getElementById('burger-menu');
-    const navMenu = document.getElementById('nav-menu');
+    const toggleButton = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
 
-    if (burgerMenu && navMenu) {
-        burgerMenu.addEventListener('click', () => {
-            burgerMenu.classList.toggle('open');
-            navMenu.classList.toggle('open');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
     }
 });
@@ -24,7 +23,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         if (authError || !user) {
             console.error('Not authenticated');
-            window.location.href = 'user-landing.html';
+            window.location.href = '/user/user-landing.html';
             return;
         }
 
@@ -50,7 +49,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Error loading dashboard:', error);
-        window.location.href = 'user-landing.html';
+        window.location.href = '/user/user-landing.html';
     }
 });
 
@@ -469,7 +468,7 @@ if (logoutBtn) {
             if (error) throw error;
             
             sessionStorage.removeItem('loggedInUser');
-            window.location.href = 'user-landing.html';
+            window.location.href = '/user/user-landing.html';
         } catch (error) {
             console.error('Logout error:', error);
             alert('Error logging out');
