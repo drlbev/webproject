@@ -658,7 +658,7 @@ function showComplaintModal(complaint) {
                 padding: 12px 15px !important;
             }
             
-            . modal-close-btn {
+            .modal-close-btn {
                 width: 28px;
                 height: 28px;
                 font-size: 22px;
@@ -670,21 +670,25 @@ function showComplaintModal(complaint) {
             }
         }
 
-        @media (max-width: 366px) {
+        @media (max-width: 375px) {
             .complaint-modal-content > div:first-child h2 {
                 font-size: 16px !important;
             }
             
             .complaint-modal-content > div:first-child p {
-                font-size: 11px !important;
-            }
-            
-            .complaint-modal-content > div:nth-child(2) h3 {
                 font-size: 13px !important;
             }
             
+            .complaint-modal-content > div:nth-child(2) h3 {
+                font-size: 15px !important;
+            }
+            
             .complaint-modal-content > div:nth-child(2) p {
-                font-size: 11px !important;
+                font-size: 13px !important;
+            }
+
+            .complaint-modal-content > div:nth-child(2) div[style*="grid-template-columns: repeat(auto-fill"] p {
+                font-size: 9px !important;
             }
             
             .modal-close-btn {
