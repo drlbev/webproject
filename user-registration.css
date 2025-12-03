@@ -908,7 +908,7 @@ input:focus, select:focus {
     }
 
     .body .bottompart .credential #email, #password, #confirmpw, #phonenum, .body .bottompart .personal #address {
-        font-size: 11pt;
+        font-size: 10pt;
     }
 }
 
