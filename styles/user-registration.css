@@ -906,6 +906,10 @@ input:focus, select:focus {
         height: 36px;
         font-size: 10pt;
     }
+
+    .body .bottompart .credential #email, #password, #confirmpw, #phonenum, .body .bottompart .personal #address {
+        font-size: 10pt;
+    }
 }
 
 
@@ -936,5 +940,9 @@ input:focus, select:focus {
 
     .body .bottompart.active {
         margin: 0 30px 30px;
+    }
+
+    .body .bottompart .credential #email, #password, #confirmpw, #phonenum, .body .bottompart .personal #address {
+        font-size: 10pt;
     }
 }
