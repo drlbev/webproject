@@ -6,19 +6,38 @@ window.onload = function() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (toggleButton) {
-        toggleButton.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+    const burgerMenu = document.querySelector('.burger-menu');
+    const rightside = document.querySelector('.navbar .rightside');
+    
+    if (burgerMenu) {
+        burgerMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            burgerMenu.classList.toggle('active');
+            rightside.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.navbar .rightside') && 
+                !event.target.closest('.burger-menu')) {
+                if (burgerMenu.classList.contains('active')) {
+                    burgerMenu.classList.remove('active');
+                    rightside.classList.remove('active');
+                }
+            }
+        });
+        
+        const navLinks = rightside.querySelectorAll('ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                burgerMenu.classList.remove('active');
+                rightside.classList.remove('active');
+            });
         });
     }
 });
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        //check authentication
         const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
         
         if (authError || !user) {
@@ -27,7 +46,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        //get user data
         const { data: userData, error: userError } = await supabaseClient
             .from('vito_user')
             .select(`
@@ -43,7 +61,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         currentUser = userData;
         console.log('User loaded:', userData);
 
-        //Load dashboard stats
         await loadDashboardStats();
         setupCardHandlers();
 
@@ -53,7 +70,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-//LOAD DASHBOARD STATS
 async function loadDashboardStats() {
     try {
         const { data: stats, error } = await supabaseClient
@@ -70,7 +86,6 @@ async function loadDashboardStats() {
             document.getElementById('mediationcount').textContent = stats.vdtstat_mediation || 0;
             document.getElementById('closedcount').textContent = stats.vdstat_resolved || 0;
         } else {
-            //No stats yet, show zeros
             document.getElementById('pendingcount').textContent = '0';
             document.getElementById('underrevcount').textContent = '0';
             document.getElementById('mediationcount').textContent = '0';
@@ -82,7 +97,6 @@ async function loadDashboardStats() {
     }
 }
 
-//SETUP CARD CLICK HANDLERS
 function setupCardHandlers() {
     const cardConfigs = [
         { id: 'pendingCard', status: 'Pending', title: 'PENDING COMPLAINTS OR REPORTS' },
@@ -104,12 +118,10 @@ function setupCardHandlers() {
     });
 }
 
-//SHOW MODAL WITH RECORDS FOR SPECIFIC STATUS
 async function showStatusModal(status, title) {
     try {
         console.log('Loading records with status:', status, 'for user:', currentUser.vu_id);
 
-        //Query based on your schema: vu_id is in vito_complaint_incident table
         const { data: records, error } = await supabaseClient
             .from('vito_complaint_incident')
             .select(`
@@ -196,7 +208,6 @@ function displayRecordsModal(records, title) {
     document.addEventListener('keydown', recordsModalEscHandler);
 }
 
-//CLOSE RECORDS MODAL
 function closeRecordsModal() {
     const modal = document.getElementById('recordsModal');
     if (modal) {
@@ -209,7 +220,6 @@ function closeRecordsModal() {
     }
 }
 
-//SEARCH TRACKING NUMBER
 const searchInput = document.getElementById('searchinput');
 
 if (searchInput) {
@@ -231,7 +241,6 @@ async function searchComplaint(trackingNumber) {
     try {
         console.log('Searching for:', trackingNumber);
 
-        //get complaint details
         const { data: complaint, error: complaintError } = await supabaseClient
             .from('vito_complaint_incident')
             .select(`
@@ -255,7 +264,6 @@ async function searchComplaint(trackingNumber) {
 
         console.log('Complaint found:', complaint);
 
-        //display complaint details
         displayComplaintDetails(complaint);
 
     } catch (error) {
@@ -270,30 +278,25 @@ function displayComplaintDetails(complaint) {
     const timeline = complaint.vito_ci_timeline || [];
     const files = complaint.vito_ci_files || [];
 
-    //sort timeline by date DESCENDING (newest first)
     timeline.sort((a, b) => {
         const dateA = new Date(a.vcitimeline_date || a.created_at);
         const dateB = new Date(b.vcitimeline_date || b.created_at);
-        return dateB - dateA; //descending order (from latest to oldest entries)
+        return dateB - dateA;
     });
 
-    //html included here to avoid in line script
     const detailsHTML = `
         <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 30px; margin-top: 30px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             
-            <!-- Header -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
                 <h3 style="color: #1f2937; font-size: 22px; font-weight: 700; margin: 0;">REPORT DETAILS</h3>
                 <button id="closeDetails" style="background: #ef4444; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">✕ Close</button>
             </div>
 
-            <!-- Tracking Number -->
             <div style="background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%); padding: 15px 20px; border-radius: 8px; margin-bottom: 25px;">
                 <p style="color: white; margin: 0; font-size: 14px; font-weight: 500;">Tracking Number:</p>
                 <p style="color: white; margin: 5px 0 0 0; font-size: 24px; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px;">${complaint.vci_tracking}</p>
             </div>
 
-            <!-- Complaint Info Grid -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
                 <div>
                     <p style="color: #6b7280; font-size: 13px; margin: 0;">Type of Complaint:</p>
@@ -331,7 +334,6 @@ function displayComplaintDetails(complaint) {
             </div>
             ` : ''}
 
-            <!-- Status Information -->
             <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
                 <h4 style="color: #1e40af; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">STATUS INFORMATION</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -362,7 +364,6 @@ function displayComplaintDetails(complaint) {
                 </div>
             </div>
 
-            <!-- Timeline (DESCENDING ORDER) -->
             <div>
                 <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">TIMELINE</h4>
                 <table style="width: 100%; border-collapse: collapse; background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
@@ -392,32 +393,26 @@ function displayComplaintDetails(complaint) {
         </div>
     `;
 
-    //insert details into page
     const searchContainer = document.querySelector('.search');
     
-    //remove existing details if any
     const existingDetails = document.getElementById('complaintDetails');
     if (existingDetails) {
         existingDetails.remove();
     }
 
-    //add new details
     const detailsDiv = document.createElement('div');
     detailsDiv.id = 'complaintDetails';
     detailsDiv.innerHTML = detailsHTML;
     searchContainer.after(detailsDiv);
 
-    //add close button handler
     document.getElementById('closeDetails').addEventListener('click', () => {
         detailsDiv.remove();
         searchInput.value = '';
     });
 
-    //scroll to details
     detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-//HELPER FUNCTIONS
 function formatDateTime(datetime) {
     if (!datetime) return 'N/A';
     const date = new Date(datetime);
@@ -440,7 +435,6 @@ function formatDate(datetime) {
     });
 }
 
-//LOGOUT HANDLER
 const logoutBtn = document.getElementById('logout');
 const logoutModal = document.getElementById('logoutModal');
 const cancelLogoutBtn = document.getElementById('cancelLogout');
@@ -461,7 +455,6 @@ if (logoutBtn) {
         }
     });
 
-    //handle logout confirmation
     confirmLogoutBtn.addEventListener('click', async () => {
         try {
             const { error } = await supabaseClient.auth.signOut();
