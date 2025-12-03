@@ -474,6 +474,7 @@ function showComplaintModal(complaint) {
             max-height: 90vh;
             animation: modalSlideIn 0.3s ease-out;
             position: relative;
+            overflow: hidden;
         }
         @keyframes modalSlideIn {
             from {
@@ -502,6 +503,7 @@ function showComplaintModal(complaint) {
             align-items: center;
             justify-content: center;
             line-height: 1;
+            z-index: 10;
         }
         .modal-close-btn:hover {
             background: rgba(255,255,255,0.3);
@@ -519,6 +521,179 @@ function showComplaintModal(complaint) {
         }
         .modal-close-button:hover {
             background: #f3f4f6;
+        }
+
+        @media (max-width: 768px) {
+            .complaint-modal {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .complaint-modal-content {
+                max-height: 95vh;
+                margin-top: 10px;
+            }
+            
+            .complaint-modal-content > div:first-child {
+                padding: 20px ! important;
+            }
+            
+            .complaint-modal-content > div:first-child h2 {
+                font-size: 20px ! important;
+            }
+            
+            .complaint-modal-content > div:first-child p {
+                font-size: 12px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) {
+                padding: 20px !important;
+            }
+            
+            . complaint-modal-content > div:nth-child(2) > div {
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) h3 {
+                font-size: 16px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) > div > div[style*="grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) p {
+                font-size: 12px !important;
+            }
+            
+            .complaint-modal-content > div:last-child {
+                padding: 15px 20px !important;
+            }
+            
+            .modal-close-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 24px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .modal-close-button {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .complaint-modal {
+                padding: 5px;
+            }
+            
+            .complaint-modal-content {
+                border-radius: 8px;
+                max-height: 98vh;
+            }
+            
+            .complaint-modal-content > div:first-child {
+                padding: 15px !important;
+                border-radius: 8px 8px 0 0 !important;
+            }
+            
+            .complaint-modal-content > div:first-child h2 {
+                font-size: 18px !important;
+            }
+            
+            .complaint-modal-content > div:first-child p {
+                font-size: 11px !important;
+            }
+            
+            .complaint-modal-content > div:first-child strong {
+                font-size: 11px !important;
+                letter-spacing: 0.5px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) {
+                padding: 15px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) > div {
+                padding: 12px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) h3 {
+                font-size: 14px ! important;
+                margin-bottom: 10px ! important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) p {
+                font-size: 11px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) > div > div[style*="flex"] {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 10px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) . timeline-item {
+                gap: 10px !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 15px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) .timeline-item > div:first-child {
+                width: 8px !important;
+                height: 8px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .complaint-modal-content > div:last-child {
+                padding: 12px 15px !important;
+            }
+            
+            . modal-close-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 22px;
+            }
+            
+            .modal-close-button {
+                padding: 7px 14px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 366px) {
+            .complaint-modal-content > div:first-child h2 {
+                font-size: 16px !important;
+            }
+            
+            .complaint-modal-content > div:first-child p {
+                font-size: 11px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) h3 {
+                font-size: 13px !important;
+            }
+            
+            .complaint-modal-content > div:nth-child(2) p {
+                font-size: 11px !important;
+            }
+            
+            .modal-close-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 20px;
+                top: 8px;
+                right: 8px;
+            }
         }
     `;
     document.head.appendChild(modalStyle);
