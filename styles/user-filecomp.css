@@ -909,18 +909,36 @@ select:enabled {
     }
     
     .body .bottompart .steps {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 10px;
     }
     
     .body .bottompart .steps .step {
-        padding-right: 0;
-        font-size: 11pt;
+        position: relative;
+        padding-right: 20px;
+        font-size: 10pt;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
     
     .body .bottompart .steps .step:not(:last-child)::after {
-        display: none;
+        display: block;
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 15px;
+        height: 1px;
+        background: #ccc;
+        transform: translateY(-50%);
+    }
+
+    .body .bottompart .steps .step.completed:not(:last-child)::after {
+        background: #3f761f;
     }
     
     .body .bottompart .cards .card {
@@ -1092,9 +1110,18 @@ select:enabled {
     .body .bottompart .header h4 {
         font-size: 11pt;
     }
+
+    .body .bottompart .steps {
+        gap: 8px;
+    }
     
     .body .bottompart .steps .step {
+        padding-right: 15px;
         font-size: 10pt;
+    }
+
+    .body .bottompart .steps .step:not(:last-child)::after {
+        width: 12px;
     }
     
     .body .bottompart .cards .card {
@@ -1144,7 +1171,7 @@ select:enabled {
     }
     
     .body .bottompart .cards .card .row .col label {
-        font-size: 9pt;
+        font-size: 10pt;
     }
     
     .body .bottompart .cards .card .minicardrow .minicard1 h4,
@@ -1212,7 +1239,7 @@ select:enabled {
     }
     
     .body .bottompart .steps .step {
-        font-size: 9pt;
+        font-size: 10pt;
     }
     
     .body .bottompart .cards .card {
@@ -1245,7 +1272,7 @@ select:enabled {
     }
     
     .body .bottompart .header h4 {
-        font-size: 10pt;
+        font-size: 12pt;
     }
     
     .body .bottompart .buttons #backbtn,
@@ -1253,5 +1280,18 @@ select:enabled {
         font-size: 10pt;
         width: 80px;
         height: 34px;
+    }
+
+    .body .bottompart .steps {
+        gap: 5px;
+    }
+
+    .body .bottompart .steps .step {
+        padding-right: 12px;
+        font-size: 10pt;
+    }
+
+    .body .bottompart .steps .step:not(:last-child)::after {
+        width: 10px;
     }
 }

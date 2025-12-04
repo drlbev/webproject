@@ -1134,6 +1134,10 @@ body {
         width: 92%;
     }
 
+    .password-container #password {
+        font-size: 10pt;
+    }
+
     .footnote .republiclogo #republiclogo {
         width: 90px;
         height: 90px;

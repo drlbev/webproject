@@ -541,32 +541,32 @@ if (loginBtn) {
 
         try {
             loginBtn.disabled = true;
+            loginBtn.style.display = 'flex';
+            loginBtn.style.alignItems = 'center';
+            loginBtn.style.justifyContent = 'center';
             loginBtn.textContent = 'LOADING';
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
+            const { data, error } = await supabaseClient.auth. signInWithPassword({
                 email: email,
                 password: password
             });
 
             if (error) throw error;
 
-            //get full user data with info
             const { data: userData, error: userError } = await supabaseClient
                 .from('vito_user')
                 .select(`
                     *,
                     vito_user_info (*)
                 `)
-                .eq('auth_user_id', data.user.id)
+                .eq('auth_user_id', data. user.id)
                 .single();
 
             if (userError) throw userError;
 
             if (userData) {
-                //store user data in sessionStorage
-                sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+                sessionStorage. setItem('loggedInUser', JSON.stringify(userData));
                 
-                //update login tracking
                 await supabaseClient
                     .from('vito_user')
                     .update({
@@ -593,7 +593,7 @@ if (loginBtn) {
                 showLoginError('Login failed: ' + error.message);
             }
             
-            loginBtn.disabled = false;
+            loginBtn. disabled = false;
             loginBtn.textContent = 'LOGIN';
         }
     });
